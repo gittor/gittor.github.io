@@ -64,15 +64,15 @@ console.log(a); // ReferenceError。
 
 > 导致js中面向对象与其他语言不同的根本，在于js中使用了原型链的方式来实现面向对象中的封装、继承、多态。
 
-> 不同的语言实现面向对象的方式都不同。但在js中，支持三种方式。
+> 不同的语言实现面向对象的方式都不同，但在js中，支持三种方式。
 >
-> 一种是不使用原型链，而是将父类数据和函数复制到子类。
+> 一种是使用对象混合技术，将父类对象的数据和函数复制到子类对象。
 >
 > 另一种是使用原型链，只通过prototype关联父子对象的形式。
 >
 > 第三种是使用ES6新增的class关键字，但底层使用的其实还是原型链。
 
-## 不使用原型链实现
+## 使用混合实现
 
 > 显式混合
 >
@@ -168,61 +168,89 @@ console.log(a); // ReferenceError。
 
 ## 使用原型链实现
 
+> 原型链说明
+>
 > Function有显式的prototype属性，可以直接访问。
 >
 > Object只有隐式的prototype属性，必须通过Object.getPrototypeOf(obj)访问。
->
-> 使用原型链的实现方式也有几种。
+
+> 使用原型链的实现方式也有2种。
 
 > 通过`var obj = Object.create(proto);`实现。
 >
 > ```js
-> var base = {
->     count: 1,
+> var Base = {
+>     init: function(){
+>         this.count = 1;
+>     },
 >     say: function(){
 >         console.log(this.count);
 >     }
 > }
-> var derived = Object.create(base);
-> derived.say(); //1
+> 
+> var Derived = Object.create(Base);
+> Derived.greet = function(){
+>     console.log("Derived.greet");
+>     this.say();
+> }
+> Derived.init = function(){
+>     Base.init.call(this);
+>     this.count = 2;
+> }
+> 
+> var obj = Object.create(Derived);
+> obj.init();
+> obj.say(); //2
 > ```
+> 这种方式的关键在于Base和Derived就是原型链上的节点。
+>
+> 所以代码中不会出现显式的prototype访问。
+>
+> 由于每个对象都是原型节点，所以如果要把属性直接定义到实例对象上，需要实现统一的init接口。
+
+
 
 > 通过`var obj = new Student();`实现。
 >
 > ```js
 > function Base(){
->     this.count = 1;
+>        this.count = 1;
 > }
 > Base.prototype.say = function(){
->     console.log(this.count);
+>        console.log(this.count);
 > }
 > 
 > function Derived(){
->     Base.call(this);
->     this.count = 2;
+>        Base.call(this);
+>        this.count = 2;
 > }
-> Derived.prototype.say = function(){
->     console.log("Derived.say");
->     Base.prototype.say.call(this);
+> Derived.prototype = Object.create(Base.prototype);
+>     Derived.prototype.greet = function(){
+>        console.log("Derived.greet");
+>        this.say();
 > }
 > 
 > var obj = new Derived();
-> obj.say();
+> obj.greet();
 > //Derived.say
 > //2
+> 
+> obj.say(); //2
 > ```
 >
-> 此时，obj.prototype === Derived.prototype。
->
-> 
+> 这种形式的关键在于用js中的"构造函数"代替面向对象中的"类"。
+
+
 
 > 原型链中一个很关键的地方就是属性屏蔽，下层对象中的属性，会屏蔽上层对象的同名属性。
+>
+> 当修改一个属性的时候，要明确想要修改的是实例对象中的属性，还是原型节点上的属性。
 >
 > 属性屏蔽有些时候会产生意想不到的问题。
 >
 > ```js
 > var base = {
->     count: 1
+>  count: 1
 > }
 > var derived = Object.create(base);
 > 
@@ -395,11 +423,42 @@ var obj = new Student();
 console.log(obj instanceof Student); //true
 ```
 
+> 直接判断两个对象的原型链关系
+
+```js
+var Foo = {}
+var Bar = Object.create(Foo);
+var b1 = Object.create(Bar);
+console.log(Foo.isPrototypeOf(Bar)); //true
+console.log(Foo.isPrototypeOf(b1)); //true
+console.log(Bar.isPrototypeOf(b1)); //true
+```
+
 
 
 ## 最佳实践
 
 > js中实现面向对象有各种不同的技术手段，现总结一种通用的程序结构设计方法。
+
+> 从传统面向对象的角度思考，则建议使用ES6中class的做法。
+
+> 从原型链的角度思考，应该摒弃类的概念，只保留对象的概念。
+>
+> 将对象分为实例对象和原型链节点对象，然后参考面向接口的设计思想。
+>
+> 将所有功能，都拆分为一个一个独立的对象。
+>
+> 1. 用于数据访问的对象。
+>    1. 主要内容是其中包含的数据，次要内容是对数据提供的访问方法。
+>    2. 最好不要有原型访问，即通过`var obj = Object.create(null);`创建。
+> 2. 用来完成功能的对象。
+>    1. 例如gConfigManager，gLogger。
+>    2. 最好不要有原型访问。
+> 3. 提供通用解决方案的对象。
+>    1. 例如实现了(用脚行走/轮子行走/用炮攻击/魔法棒治疗)等功能的对象。
+> 4. 具体的实例对象。
+>    1. 在对象内部保存一个解决方案对象。
+>    2. 通过直接调用这个解决方案对象的方式，实现功能。
 
 # JS的类型系统
 
@@ -481,3 +540,12 @@ console.log(obj instanceof Student); //true
 
 # 无法归类的主题
 
+# 总结
+
+js给我的感觉像是一锅大杂烩一样。
+
+虽然c++也是一锅烩，但起码可以被分成不同的技术主题，主题之间往往有比较明确的界限，不会难以记忆。
+
+js中的杂烩，是所有细节内容都掺杂在一起，导致根本没办法根据一套特定的规则来记忆。
+
+比如同样是面向对象的语义，this使用的是动态绑定，super却使用的是静态绑定。
