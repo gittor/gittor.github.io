@@ -462,16 +462,17 @@ console.log(Bar.isPrototypeOf(b1)); //true
 
 # JS的类型系统
 
-> js中共有7种语言类型：
+> js中共有8种语言类型(规范中应该是7种，function是object的一个子类型，但在此将其理解为一种独立的类型更合适，因为typeof对其特殊处理了)：
 >
 > ```js
 > console.log(typeof {}); //object
 > console.log(typeof "zhang"); //string
 > console.log(typeof 3.2); //number
 > console.log(typeof false); //boolean
-> console.log(typeof function(){}); //function
+> console.log(typeof function(){}); //function。其实是object的子类型
 > console.log(typeof null); //object
 > console.log(typeof undefined); //undefined
+> console.log(typeof Symbol()); //symbol。ES6中新增。
 > ```
 >
 > 其中`typeof null`返回object，是一个实现时的bug。其实应该返回null。
@@ -496,11 +497,186 @@ console.log(Bar.isPrototypeOf(b1)); //true
 >
 > Error：一般被自动创建，也可以`new Error()`。
 
-## object支持的操作
+## Object支持的操作
 
 ## 如何复制一个对象
 
+## 数组操作
 
+> 基本操作
+
+```js
+var a = [1, 2, 3]
+
+a[3] = undefined;
+a[5] = 6
+console.log(a.length); //6
+console.log(a); //[ 1, 2, 3, undefined, <1 empty item>, 6 ]
+console.log(a[4]); //undefined
+
+delete a[2];
+console.log(a.length); //6。删除元素不会导致长度变化，即使删除最后一个元素也不会导致长度变化。
+console.log(a); //[ 1, 2, <1 empty item>, undefined, <1 empty item>, 6 ]
+
+a.name = "zhang";
+console.log(a.length); //6。添加属性不会导致长度变化
+console.log(a); //[ 1, 2, <1 empty item>, undefined, <1 empty item>, 6, name: 'zhang' ]
+
+a.length = 3; //可以通过设置数组长度来截断数组
+console.log(a); //[ 1, 2, <1 empty item>, name: 'zhang' ]
+```
+
+> 将Array-like对象转换为真正的Array
+
+```js
+function foo()
+{
+    var arr = Array.prototype.slice.call(arguments); //将arguments转换为真正的数组
+    console.log(arr);
+}
+
+foo("apple", "banana"); //[ 'apple', 'banana' ]
+```
+
+> 查找
+
+```js
+var a = ["apple", "banana", "orange"]
+
+console.log(a.indexOf("banana")); //1
+console.log(a.indexOf("none")); //-1
+
+//根据规则查找
+console.log(a.findIndex((item)=>{
+    return item[0] === 'o';
+})); //2
+```
+
+> 连接两个数组
+
+```js
+var a = ["apple", "banana", "orange"]
+var b = a.concat("black");
+var c = a.concat(["black"]);
+
+console.log(a); //[ 'apple', 'banana', 'orange' ]
+console.log(b); //[ 'apple', 'banana', 'orange', 'black' ]
+console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
+```
+
+
+
+## 字符串操作
+
+> 基本操作
+>
+> ```js
+> var name = "zhang";
+> 
+> name[2] = 'x';
+> console.log(name); //zhang。字符串是不可修改的
+> ```
+
+> 借用数组的方法来处理函数
+>
+> ```js
+> var name = "zhang";
+> 
+> console.log(Array.prototype.join.call(name, '-')); //z-h-a-n-g
+> 
+> var b = Array.prototype.map.call(name, (c)=>{
+>     return c.toUpperCase()+"*";
+> });
+> console.log(b); //[ 'Z*', 'H*', 'A*', 'N*', 'G*' ]
+> ```
+
+> 其他操作
+>
+> ```js
+> var name = "zhang";
+> 
+> console.log(name.toUpperCase()); //ZHANG
+> console.log(name.toLowerCase()); //zhang
+> ```
+
+## 数字操作
+
+> js中只有浮点数，没有整数。
+
+> 基本操作
+>
+> ```js
+> var a = 5E10;
+> console.log(a); //50000000000
+> console.log(a.toExponential()); //5e+10
+> 
+> var b = 42.59;
+> 
+> //四舍五入到第n位后转换成字符串
+> console.log(b.toFixed(0)); //"43"
+> console.log(b.toFixed(1)); //"42.6"
+> console.log(b.toFixed(2)); //"42.59"
+> console.log(b.toFixed(3)); //"42.590"
+> console.log(b.toFixed(4)); //"42.5900"
+> 
+> //从最高位算起，保留n位有效数字后转换成字符串
+> console.log(b.toPrecision(1)); //"4e+1"
+> console.log(b.toPrecision(2)); //"43"
+> console.log(b.toPrecision(3)); //"42.6"
+> console.log(b.toPrecision(4)); //"42.59"
+> console.log(b.toPrecision(5)); //"42.590"
+> ```
+
+> | 含义                   | 表示法                                                |
+> | ---------------------- | ----------------------------------------------------- |
+> | 十六进制/八进制/二进制 | 0xff/0o7/0b1                                          |
+> | 最小/最大的浮点数      | Number.MIN_VALUE、Number.MAX_VALUE                    |
+> | 浮点数判等的阈值       | Number.EPSILON                                        |
+> | 安全整数的范围         | Number.MIN_SAFE_INTEGER、Number.MAX_SAFE_INTEGER      |
+> | 检测是否整数           | `Number.isInteger(42.0); //true`                      |
+> | 检测是否安全整数       | `Number.isSafeInteger(42.0); //true`                  |
+> | 转换为32位整数值       | `var n = 42.3|0;`忽略其他位数，只保留有效的32位整数。 |
+
+> 无效数值NaN
+>
+> ```js
+> console.log(NaN===NaN); //false。js中唯一一个不等于自身的值。
+> 
+> console.log(isNaN(42)); //false
+> console.log(isNaN("apple")); //true。这是isNaN的一个bug。
+> 
+> //Number.isNaN只能在ES6及其之后使用
+> console.log(Number.isNaN(42)); //false
+> console.log(Number.isNaN("42")); //false
+> ```
+
+> 代表无穷的数字
+>
+> ```js
+> console.log(1/0); //Infinity。用Number.POSITIVE_INFINITY表示
+> console.log(-1/0); //-Infinity。用Number.NEGATIVE_INFINITY表示
+> ```
+>
+> 当运算结果溢出时，也会导致出现无穷数。
+>
+> 应该避免对无穷数做运算。
+>
+> ```js
+> console.log(Number.POSITIVE_INFINITY/Number.POSITIVE_INFINITY); //NaN
+> console.log(Number.POSITIVE_INFINITY*Number.POSITIVE_INFINITY); //Infinity
+> ```
+
+> 正负0
+>
+> 正负0都是相等的，运算时也是可以相互替换的。只有一个方法可以区分0的符号。
+>
+> ```js
+> //此方法属于ES6新增方法
+> console.log(Object.is(-1*0, -0)); //true
+> console.log(Object.is(-1*0, 0)); //false
+> ```
+>
+> 保留-0是为了，防止一个负数逐渐变成0的时候，丢失了它的符号位，导致需要符号位的运算过程失效。
 
 # 严格模式
 
@@ -517,24 +693,24 @@ console.log(Bar.isPrototypeOf(b1)); //true
 | 写入不存在的普通变量   | ReferenceError     | 在全局作用域创建变量           |
 | with                   | 不允许使用         | 允许使用但容易出错，不建议使用 |
 | 普通函数的this绑定到哪 | undefined          | global                         |
-|                        |                    |                                |
-|                        |                    |                                |
+| 八进制使用"07"的写法   | 不支持             | 支持                           |
+| 为undefined赋值        | TypeError          | 可以                           |
 |                        |                    |                                |
 |                        |                    |                                |
 
 # ES6新增关键字
 
-| 关键字 | 说明                                                         |
-| ------ | ------------------------------------------------------------ |
-| let    | 可以支持将变量定义在块作用域中<br />不会像var一样将声明和赋值分开(术语叫提升)<br />在`for(let i=0;i<10;++i)`中，每次循环都会创建一个新的循环变量`i` |
-| const  | 用法和含义同let，只是不可修改                                |
-| import | 从模块中导入某个函数。`import fun from "somefile"`           |
-| export | 从模块中导出某个函数。`export fun`                           |
-| module | 导入整个模块。`module some from "somefile"`                  |
-| =>     | 如果闭包函数用=>定义，则可以将真正的调用对象自动绑定到闭包函数中的this上。 |
-|        |                                                              |
-|        |                                                              |
-|        |                                                              |
+| 关键字       | 说明                                                         |
+| ------------ | ------------------------------------------------------------ |
+| let          | 可以支持将变量定义在块作用域中<br />不会像var一样将声明和赋值分开(术语叫提升)<br />在`for(let i=0;i<10;++i)`中，每次循环都会创建一个新的循环变量`i` |
+| const        | 用法和含义同let，只是不可修改                                |
+| import       | 从模块中导入某个函数。`import fun from "somefile"`           |
+| export       | 从模块中导出某个函数。`export fun`                           |
+| module       | 导入整个模块。`module some from "somefile"`                  |
+| =>           | 如果闭包函数用=>定义，则可以将真正的调用对象自动绑定到闭包函数中的this上。 |
+| Number.isNaN |                                                              |
+|              |                                                              |
+|              |                                                              |
 
 
 
@@ -542,10 +718,16 @@ console.log(Bar.isPrototypeOf(b1)); //true
 
 # 总结
 
-js给我的感觉像是一锅大杂烩一样。
+> js给我的感觉像是一锅大杂烩一样。
+>
+> 虽然c++也是一锅烩，但起码可以被分成不同的技术主题，主题之间往往有比较明确的界限，不会难以记忆。js中的杂烩，是所有细节内容都掺杂在一起，导致根本没办法根据一套特定的规则来记忆。比如同样是面向对象的语义，this使用的是动态绑定，super却使用的是静态绑定。
 
-虽然c++也是一锅烩，但起码可以被分成不同的技术主题，主题之间往往有比较明确的界限，不会难以记忆。
-
-js中的杂烩，是所有细节内容都掺杂在一起，导致根本没办法根据一套特定的规则来记忆。
-
-比如同样是面向对象的语义，this使用的是动态绑定，super却使用的是静态绑定。
+> 如果把语言看成工具，类型系统看做积木。
+>
+> 越是静态的语言，提供的工具越有限，搭积木越方便，而修改积木本身变得越困难。比如Array是一个数组，C++中只能通过整数下标来访问，只能存储固定的值。
+>
+> 越是动态的语言，提供的工具能力越来越强，有时候甚至可以修改积木本身。比如js中的数组可以表现得像一个对象，通过属性来访问数据。
+>
+> 这是两个极端，左面是C++，虽然能完成任务，但需要更精巧的设计，用时可能会更长；右面是JS，能按照程序员的想法随意存储访问任何数据，虽然简单任务会变得更容易实现，但大型项目会造成流程上的混乱。
+>
+> 这种情况下，在写JS代码时，要求我们做更细化的数据流设计，避免出现数据流混乱的问题。这是写js代码最容易忽略的地方。
