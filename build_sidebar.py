@@ -1,6 +1,6 @@
 #encoding=utf8
 
-# 执行这个文件，会重新生成_sidebar.md
+# 执行这个文件，会在脚本所在路径，重新生成_sidebar.md
 
 # 运行环境
 #   python 3.x
@@ -9,6 +9,7 @@
 # 输出：直接覆盖_sidebar.md
 
 import os
+import sys
 
 StarIndent = 4
 
@@ -102,6 +103,10 @@ def getTotalMD():
     return ret
 
 def main():
+    # 先把当前路径调整为脚本所在路径，以便于可以双击直接运行
+    scriptdir = os.path.split(sys.argv[0])[0]
+    os.chdir(scriptdir)
+    
     with open("_sidebar.md", "w", encoding="utf8") as fout:
         data = getTotalMD()
         fout.write(data)

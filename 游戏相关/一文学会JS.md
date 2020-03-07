@@ -60,9 +60,17 @@ foo();
 console.log(a); // ReferenceError。
 ```
 
-# js中的面向对象
+# JS中的面向对象
 
-导致js中面向对象与其他语言不同的根本，在于js中使用了原型链的方式来实现面向对象中的封装、继承、多态。
+> 导致js中面向对象与其他语言不同的根本，在于js中使用了原型链的方式来实现面向对象中的封装、继承、多态。
+
+> 不同的语言实现面向对象的方式都不同。但在js中，支持三种方式。
+>
+> 一种是不使用原型链，而是将父类数据和函数复制到子类。
+>
+> 另一种是使用原型链，只通过prototype关联父子对象的形式。
+>
+> 第三种是使用ES6新增的class关键字，但底层使用的其实还是原型链。
 
 ## 不使用原型链实现
 
@@ -160,9 +168,73 @@ console.log(a); // ReferenceError。
 
 ## 使用原型链实现
 
+> Function有显式的prototype属性，可以直接访问。
+>
+> Object只有隐式的prototype属性，必须通过Object.getPrototypeOf(obj)访问。
+>
+> 使用原型链的实现方式也有几种。
+
+> 通过`var obj = Object.create(proto);`实现。
+>
+> ```js
+> var base = {
+>     count: 1,
+>     say: function(){
+>         console.log(this.count);
+>     }
+> }
+> var derived = Object.create(base);
+> derived.say(); //1
+> ```
+
+> 通过`var obj = new Student();`实现。
+>
+> ```js
+> function Base(){
+>     this.count = 1;
+> }
+> Base.prototype.say = function(){
+>     console.log(this.count);
+> }
+> 
+> function Derived(){
+>     Base.call(this);
+>     this.count = 2;
+> }
+> Derived.prototype.say = function(){
+>     console.log("Derived.say");
+>     Base.prototype.say.call(this);
+> }
+> 
+> var obj = new Derived();
+> obj.say();
+> //Derived.say
+> //2
+> ```
+>
+> 此时，obj.prototype === Derived.prototype。
+>
+> 
+
+> 原型链中一个很关键的地方就是属性屏蔽，下层对象中的属性，会屏蔽上层对象的同名属性。
+>
+> 属性屏蔽有些时候会产生意想不到的问题。
+>
+> ```js
+> var base = {
+>     count: 1
+> }
+> var derived = Object.create(base);
+> 
+> derived.count++; //相当于derived.count=derived.count+1;，导致覆盖了base.count。
+> 
+> console.log(base.count); //1
+> console.log(derived.count); //2
+> ```
+>
+> 
+
 ## ES6中的做法
-
-
 
 ## new做了什么？
 
@@ -179,7 +251,7 @@ new在工作时，一共做了4件事。
 > //上面的代码，相当于执行
 > function Student() {
 >     var obj = Object.create(null); //1
->     obj.prototype = Student.prototype; //2
+>     Object.setPrototypeOf(obj, Student.prototype);//2
 >     this = obj; //3
 > 
 >     this.name = "zhang";
@@ -308,7 +380,26 @@ bar.call(obj2); //this已经有绑定，所以不会再次绑定。所以输出1
 >
 > 这几种绑定形式的优先级为：④>②=⑤>③>①。⑥自成一派，会直接使用使用外层词法作用域的this。
 
+## 如何判断父子关系
 
+> 判断对象是否由某个类构造，使用instanceof
+>
+> 实际为查找Student.prototype是否在obj的原型链上出现过
+
+```js
+function Student(){
+
+}
+var obj = new Student();
+
+console.log(obj instanceof Student); //true
+```
+
+
+
+## 最佳实践
+
+> js中实现面向对象有各种不同的技术手段，现总结一种通用的程序结构设计方法。
 
 # JS的类型系统
 
