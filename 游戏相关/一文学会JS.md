@@ -564,11 +564,25 @@ console.log(b); //[ 'apple', 'banana', 'orange', 'black' ]
 console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 ```
 
-
+> 创建一个固定大小的数组
+>
+> ```js
+> var a = new Array(3);
+> console.log(a); //[ <3 empty items> ]
+> 
+> var b = [];
+> b.length = 3;
+> console.log(b); //[ <3 empty items> ]
+> 
+> var c = Array.apply(null, { length : 3 });
+> console.log(c); //[ undefined, undefined, undefined ]
+> ```
+>
+> 
 
 ## 字符串操作
 
-> 基本操作
+> 不可修改
 >
 > ```js
 > var name = "zhang";
@@ -592,12 +606,17 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 
 > 其他操作
 >
-> ```js
-> var name = "zhang";
+> 假设`var name = "zhang";`。
+>
+> | 操作         | 调用                                   | 说明                                                         |
+> | ------------ | -------------------------------------- | ------------------------------------------------------------ |
+> | 全部转为大写 | `var b = name.toUpperCase();`          | ZHANG                                                        |
+> | 全部转为小写 | `var b = name.toLowerCase();`          | zhang                                                        |
+> | 截取子串     | `var b=name.substr(start, length=end)` | start为-1时代表最后一个字符<br />这个函数可以完全替代`substring` |
+> | 截取子串2    | `var b=name.slice(start, end)`         | 得到**[start,end)**的子串                                    |
+> | 去掉前后空格 | `var b=name.trim()`                    |                                                              |
+>
 > 
-> console.log(name.toUpperCase()); //ZHANG
-> console.log(name.toLowerCase()); //zhang
-> ```
 
 ## 数字操作
 
@@ -612,14 +631,14 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 > 
 > var b = 42.59;
 > 
-> //四舍五入到第n位后转换成字符串
+> //保留小数点后n位后转换成字符串，必要时进行四舍五入
 > console.log(b.toFixed(0)); //"43"
 > console.log(b.toFixed(1)); //"42.6"
 > console.log(b.toFixed(2)); //"42.59"
 > console.log(b.toFixed(3)); //"42.590"
 > console.log(b.toFixed(4)); //"42.5900"
 > 
-> //从最高位算起，保留n位有效数字后转换成字符串
+> //从最高位算起，保留n位有效数字后转换成字符串，必要时进行四舍五入
 > console.log(b.toPrecision(1)); //"4e+1"
 > console.log(b.toPrecision(2)); //"43"
 > console.log(b.toPrecision(3)); //"42.6"
@@ -678,6 +697,143 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 >
 > 保留-0是为了，防止一个负数逐渐变成0的时候，丢失了它的符号位，导致需要符号位的运算过程失效。
 
+## 布尔操作
+
+> ```js
+> var b = new Boolean(false); //手动装箱
+> 
+> if(b)
+> {
+>     console.log("b is true"); //会执行到这里，因为b现在有值
+> }
+> 
+> if(b.valueOf()) //手动拆箱
+> {
+>     console.log("b is true"); //执行不到这里
+> }
+> ```
+
+| 表达式    | 结果  |
+| --------- | ----- |
+| "0"       | true  |
+| []        | true  |
+| {}        | true  |
+| ""        | false |
+| 0         | false |
+| null      | false |
+| undefined | false |
+
+## 正则表达式
+
+```js
+var a = /pattern/attributes;
+var b = new RegExp(pattern, attributes);
+```
+
+attributes的可选值:
+
+| 修饰符 | 描述             |
+| ------ | ---------------- |
+| i      | 大小写不敏感     |
+| g      | 直到找到所有匹配 |
+| m      | 多行匹配         |
+
+成员变量
+
+| 变量名       | 含义                           |
+| ------------ | ------------------------------ |
+| r.ignoreCase | attributes是否具有i属性        |
+| r.global     | attributes是否具有g属性        |
+| r.mutiline   | attributes是否具有m属性        |
+| r.source     | 得到pattern                    |
+| r.lastIndex  | 整数。开始下一次匹配的字符位置 |
+
+成员函数
+
+| 方法                       | 说明                                                         |
+| -------------------------- | ------------------------------------------------------------ |
+| compile                    |                                                              |
+| `var res = r.exec(string)` | 找到时返回结果数组，找不到时返回null。<br />结果数组中第0个元素是匹配结果，第1个元素是`()`的子串匹配结果。 |
+| `var res = r.test(string)` | 同exec，但只返回匹配(true)或不匹配(false)。                  |
+
+## 日期类型
+
+```js
+var date = new Date(); //得到当前时间
+var nowstamp = Date.now(); //取得当前时间戳
+```
+
+参考链接：https://www.w3school.com.cn/jsref/jsref_obj_date.asp
+
+## 异常类型
+
+可以手动构造一个Error来获得当前调用堆栈信息，作为调试手段之一。
+
+```js
+function say()
+{
+    var e = new Error();
+    console.log(e); //会打印当前调用堆栈
+}
+function walkAndSay()
+{
+    say();
+}
+
+walkAndSay();
+```
+
+## 类型转换
+
+字符串与数字
+
+| 转换类型       | 操作                                                         |
+| -------------- | ------------------------------------------------------------ |
+| 数字转字符串   | `var a = String(3.14);`                                      |
+| 字符串转数字   | `var b = Number("3.14");`参数只能是合法数字，不能有任何非数字字符。 |
+| 字符串转整数   | `var b = parseInt("3.14px");`返回3<br />**注意**：ES5中使用parseInt时，不指定第二个参数，"077"会被当做八进制解析。<br />ES6会将其当做10进制解析。 |
+| 字符串转浮点数 | `var b = parseFloat("3.14px");`返回3.14                      |
+
+bool与数字
+
+| 转换类型   | 操作                                                         |
+| ---------- | ------------------------------------------------------------ |
+| bool转数字 | `var b = Boolean(true);`返回1。<br />`var b = Boolean(false);`返回0。 |
+|            |                                                              |
+|            |                                                              |
+
+## &&和||
+
+和其他语言不同，js中的&&和||返回的是操作数中的一个，而不是bool。
+
+| 操作          | 结果  |
+| ------------- | ----- |
+| 42\|\|"abc"   | 42    |
+| a&&"abc"      | "abc" |
+| null\|\|"abc" | "abc" |
+| null&&"abc"   | null  |
+
+## ==和===
+
+当操作数的类型不同时，===直接返回false，==会统一两个操作数的类型再比较。
+
+| 操作数类型      | 结果             |
+| --------------- | ---------------- |
+| 数字==字符串    | 字符串转换为数字 |
+| bool==其他      | bool转换为数字   |
+| null==undefined | true             |
+| 对象==字符串    | 对象转换为字符串 |
+| 对象==数字      | 对象转换为数字   |
+| 对象==对象      | 比较内存地址     |
+
+## 小于<和大于>
+
+大于和小于可以用来比较两个字符串，以字典顺序。
+
+## Symbol类型
+
+> 符号类型一般用于防止出现重复名字的属性。
+
 # 严格模式
 
 `"use strict"`关键字可以开启严格模式。
@@ -709,7 +865,7 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 | module       | 导入整个模块。`module some from "somefile"`                  |
 | =>           | 如果闭包函数用=>定义，则可以将真正的调用对象自动绑定到闭包函数中的this上。 |
 | Number.isNaN |                                                              |
-|              |                                                              |
+| Symbol       |                                                              |
 |              |                                                              |
 
 
