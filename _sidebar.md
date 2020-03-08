@@ -1,4 +1,6 @@
 <!-- 由build_sidebar.py生成，勿手改 -->
+* 游戏实践
+    * [游戏实践](.\游戏实践\游戏实践.md)
 * 游戏相关
     * [3D数学](.\游戏相关\3D数学.md)
     * [unity-shader](.\游戏相关\unity-shader.md)

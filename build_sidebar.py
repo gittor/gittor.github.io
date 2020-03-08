@@ -80,7 +80,7 @@ def getPath(parentpath, pathname, indent):
             ret += getPath(relative, name, indent+StarIndent)
 
     for name in os.listdir(relative):
-        if name.lower() == "readme.md": continue
+        if name.lower() == "home.md": continue
 
         sub = os.path.join(relative, name)
         if os.path.isfile(sub):
