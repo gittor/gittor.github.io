@@ -16,11 +16,11 @@ StarIndent = 4
 def ShouldIgnore(file_or_path):
     '''
     Args:
-        file_or_path: 文件名或路径名，相对于当前路径
+        file_or_path: 文件名或路径名，相对于根目录
     Returns:
         返回file_or_path是否应该被忽略
     '''
-    ignored = ["jigsaw", ".git"]
+    ignored = [r"游戏实践\jigsaw", ".git"]
 
     # print(file_or_path)
 

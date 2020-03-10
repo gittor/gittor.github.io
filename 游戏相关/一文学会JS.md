@@ -2,9 +2,12 @@
 
 本文主要来自于《你不知道的JavaScript》，分成几个角度总结了js开发中的方方面面。
 
-* 易混淆主题：例如普通变量与作用域主题。分为原理(要记住)和自测(检验是否学会)两部分。
-* 最佳实践：例如`如何`系列和`不要`系列。
-* 重要API介绍。
+这是一篇总结性质的文章，所以要求读者有一定的js基础。
+
+总结的内容主要分为两部分：
+
+1. 易错点
+2. 最佳实践
 
 # 普通变量与作用域
 
@@ -867,6 +870,98 @@ bool与数字
 | Number.isNaN |                                                              |
 | Symbol       |                                                              |
 |              |                                                              |
+
+# 异步
+
+> js中的异步分为两部分，ES5中使用回调的方式完成异步通知，ES6中使用Promise完成异步通知。
+>
+> 1. ES5中也有Promise库，但都是第三方的，底层还是回调，所以还是有回调的问题。
+> 2. ES6中的Promise，是由ES委员会定义的一套标准，从原理本身对错误进行了规避。
+
+>使用回调的方式有几个缺点：
+>
+>1. 大量的回调可能会嵌套，造成回调地狱。这部分可以通过重构代码解决。
+>2. 没有统一的接口来处理异步链需求，通常会写成函数嵌套的问题，使代码不太清晰。
+>   1. 异步链需求：ABC是三个独立的异步任务，但需要以A->B->C的顺序依次完成。
+>3. 如果某工作函数提供了一个回调参数，当不能确定回调函数的调用时机(同步/异步)时，回调内的代码和工作函数后面的代码，先执行哪部分是不知道的。
+>4. 由于回调时机掌握在工作函数手里，所以回调函数可能被意外地多次执行或不执行。
+>5. 回调方式往往伴随着setTimeout的使用，如果在工作函数中抛出异常，setTimeout是不会把这个异常通知给调用代码的。
+>
+>上面缺点1、2，出错的代码掌握在自己手里，是可以通过重构解决的，这不是核心问题。缺点3、4、5，是由于工作函数可能出错导致的。如果所有的工作函数都是完全正确的，或程序员只使用了其中正确的部分，那回调的方式完全没问题。但一旦工作函数出了问题，我们是没办法直接解决的。
+>
+>所以，如何避免工作函数出错，就成了核心问题。有鉴于此，ES提供了Promise标准，从语言本身解决了上面的问题。
+
+## Promise接口
+
+### 基础用法
+
+```js
+var p = new Promise(function(resolve, reject){
+    resolve(1000);
+});
+
+p.then(function onfulfill(val){
+    console.log(val);
+},function onreject(err){
+    console.log("onreject:", err.message);
+})
+.catch(function(err){
+    console.log("catch:", err.message);
+});
+```
+
+有以下几个特点：
+
+1. 通过构造函数传进去的函数会立即执行，通过then传进去的回调函数本轮事件循环内一定不会执行。解决了问题3。
+2. 一个then最多只会被调用一次。如果then在异步函数执行完才添加，也会被调用。解决了回调多次被调用的问题。
+3. then可以链式调用，并且回调顺序和调用顺序一致。解决了问题2。
+4. then内的onfulfill可以传回另一个值，这个过程可以用来实现数据管道。
+5. 如果整个异步链的某一步出现了异常，异常会被传递到第一个onreject或catch。解决了问题5。
+
+调用时机(只总结了最有用的几种情况)
+
+| 函数      | 调用时机                                  |
+| --------- | ----------------------------------------- |
+| 工作函数  | 同步立即调用                              |
+| onfulfill | resolve被调用并且结果正确                 |
+| onreject  | 发生异常或者reject被调用                  |
+| catch     | 发生异常并且catch前没有设置任何onreject。 |
+
+遗留的问题：如果工作函数既没有出错，也没有resolve和reject，则then就一直不被回调。参考下面的解决方案。
+
+### 超时机制
+
+```js
+function timeoutPromise(delay_ms) {
+    return new Promise(function(resolve, reject){
+        setTimeout(() => {
+            reject("timeout");
+        }, delay_ms);
+    });
+}
+
+Promise.race([foo(), timeoutPromise(1000)])
+.then(function onfulfill(val){
+    //foo完成
+}, function onreject(err){
+    //foo拒绝或超时
+});
+```
+
+### 使用建议
+
+* 避免嵌套使用Promise。
+* 总是在onfulfill和onreject内返回正确的数据或抛出正确的异常。
+* 尽量使用catch块。
+
+### 常用API
+
+| 接口                               | 说明                                                         |
+| ---------------------------------- | ------------------------------------------------------------ |
+| `val p = Promise.resolve(result);` | 返回一个决议的result Promise对象。                           |
+| `val p = Promise.reject(result);`  | 返回一个拒绝的result Promise对象。                           |
+| `val p = Promise.all([p1, p2]);`   | 数组中所有Promise对象都resolve，结果才resolove。<br />并且onfulfill接收results数组，顺序为[p1.result,p2.result]。<br />如果数组为空，表示成功完成。 |
+| `val p = Promise.race([p1,p2])`    | 只取数组中第一个Promise的决议结果。<br />如果数组为空，则会挂起并且永远不会调用then。所以应该禁止传空数组。 |
 
 
 
