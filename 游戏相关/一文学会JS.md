@@ -934,6 +934,32 @@ for(let n of fab)
 }
 ```
 
+## 枚举一个生成器
+
+```js
+function* fruit(){
+  yield "apple";
+  yield "banana";
+}
+
+function* vegetable(){
+  yield "tomato";
+  yield "potato";
+}
+
+function* shop(){ //shop依次枚举了其他两个生成器
+  yield* fruit();
+  yield* vegetable();
+}
+
+for(let x of shop()) //结果为输出商店内所有的水果和蔬菜
+{
+  console.log(x);
+}
+```
+
+
+
 # 严格模式
 
 `"use strict"`关键字可以开启严格模式。
@@ -1159,9 +1185,7 @@ outputFruit("banana");
 | ES6  | 语言本身提供了Promise机制，其实质是异步回调的封装。<br />由第三方提供"生成器+异步"形式的库。 |
 | ES7  | 语言本身提供了async和await关键字，进一步封装了"生成器+异步"的方式。 |
 
-# 模块管理系统
-
-# 性能优化
+# 模块管理
 
 # Babel
 
