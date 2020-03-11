@@ -500,7 +500,25 @@ console.log(Bar.isPrototypeOf(b1)); //true
 >
 > Error：一般被自动创建，也可以`new Error()`。
 
-## Object支持的操作
+## Object常用操作
+
+常用操作
+
+| 方法                                      | 说明                                       |
+| ----------------------------------------- | ------------------------------------------ |
+| `target = Object.assign(target, source);` | 将source中的所有可枚举属性，覆盖到target。 |
+| `Object.entries(obj)`                     | 返回obj的所有直接属性的键值对。            |
+| `Object.keys(obj)`                        | 返回内容同entries，但只返回键。            |
+| `Object.values(obj)`                      | 返回内容同entries，但只返回值。            |
+
+循环
+
+| 循环方式 | 循环内容        |
+| -------- | --------------- |
+| for...in | 同Object.keys   |
+| for...of | 同Object.values |
+
+
 
 ## 如何复制一个对象
 
@@ -618,6 +636,8 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 > | 截取子串     | `var b=name.substr(start, length=end)` | start为-1时代表最后一个字符<br />这个函数可以完全替代`substring` |
 > | 截取子串2    | `var b=name.slice(start, end)`         | 得到**[start,end)**的子串                                    |
 > | 去掉前后空格 | `var b=name.trim()`                    |                                                              |
+> | 格式化       | ``console.log(`my name is ${name}`);`` | ES6首次提供。ES5中用原始的+。                                |
+> | 反格式化     |                                        |                                                              |
 >
 > 
 
@@ -785,6 +805,15 @@ function walkAndSay()
 
 walkAndSay();
 ```
+
+## JSON操作
+
+| 方法                              | 说明                   |
+| --------------------------------- | ---------------------- |
+| `var obj = JSON.parse(text);`     | 将字符串解析为对象     |
+| `var text = JSON.stringify(obj);` | 将对象转换为json字符串 |
+
+
 
 ## 类型转换
 
