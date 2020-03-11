@@ -510,6 +510,7 @@ console.log(Bar.isPrototypeOf(b1)); //true
 | `Object.entries(obj)`                     | 返回obj的所有直接属性的键值对。            |
 | `Object.keys(obj)`                        | 返回内容同entries，但只返回键。            |
 | `Object.values(obj)`                      | 返回内容同entries，但只返回值。            |
+| `Object.setPrototypeOf(obj, proto)`       | 将obj的prototype设为proto。                |
 
 循环
 
@@ -521,6 +522,18 @@ console.log(Bar.isPrototypeOf(b1)); //true
 
 
 ## 如何复制一个对象
+
+## getter/setter
+
+```js
+var obj = {
+  _id : 0,
+  get id(){ return this._id;},
+  set id(value){this._id = value;}
+}
+```
+
+
 
 ## 数组操作
 
@@ -629,15 +642,31 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 >
 > 假设`var name = "zhang";`。
 >
-> | 操作         | 调用                                   | 说明                                                         |
-> | ------------ | -------------------------------------- | ------------------------------------------------------------ |
-> | 全部转为大写 | `var b = name.toUpperCase();`          | ZHANG                                                        |
-> | 全部转为小写 | `var b = name.toLowerCase();`          | zhang                                                        |
-> | 截取子串     | `var b=name.substr(start, length=end)` | start为-1时代表最后一个字符<br />这个函数可以完全替代`substring` |
-> | 截取子串2    | `var b=name.slice(start, end)`         | 得到**[start,end)**的子串                                    |
-> | 去掉前后空格 | `var b=name.trim()`                    |                                                              |
-> | 格式化       | ``console.log(`my name is ${name}`);`` | ES6首次提供。ES5中用原始的+。                                |
-> | 反格式化     |                                        |                                                              |
+> | 操作         | 调用                                   | 说明                                      |
+> | ------------ | -------------------------------------- | ----------------------------------------- |
+> | 全部转为大写 | `var b = name.toUpperCase();`          | ZHANG                                     |
+> | 全部转为小写 | `var b = name.toLowerCase();`          | zhang                                     |
+> | 截取子串1    | `var b=name.substr(start, length)`     | start为-1时代表最后一个字符。             |
+> | 截取子串2    | `var b=name.substring(start, end)`     | 得到**[start,end)**的子串，参数不能为负。 |
+> | 截取子串3    | `var b=name.slice(start, end)`         | 得到**[start,end)**的子串。参数可以为负。 |
+> | 去掉前后空格 | `var b=name.trim()`                    |                                           |
+> | 格式化       | ``console.log(`my name is ${name}`);`` | ES6首次提供。ES5中用原始的+。             |
+> | 反格式化     |                                        |                                           |
+> | 规范化       | `name.normalize();`                    | 进行unicode规范化。                       |
+> | 查找内容     | `name.match(/an/)`                     | 返回值是所有匹配内容的数组                |
+>
+
+> 处理unicode字符串
+>
+> ```js
+> //计算长度
+> [...name.normalize()].length;
+> ```
+>
+> ```js
+> //读取字符
+> name.codePointAt(index);
+> ```
 >
 > 
 
@@ -678,6 +707,7 @@ console.log(c); //[ 'apple', 'banana', 'orange', 'black' ]
 > | 检测是否整数           | `Number.isInteger(42.0); //true`                      |
 > | 检测是否安全整数       | `Number.isSafeInteger(42.0); //true`                  |
 > | 转换为32位整数值       | `var n = 42.3|0;`忽略其他位数，只保留有效的32位整数。 |
+> | 转换为任意进制的字符串 | `n.toString(8);`                                      |
 
 > 无效数值NaN
 >
@@ -755,21 +785,24 @@ var b = new RegExp(pattern, attributes);
 
 attributes的可选值:
 
-| 修饰符 | 描述             |
-| ------ | ---------------- |
-| i      | 大小写不敏感     |
-| g      | 直到找到所有匹配 |
-| m      | 多行匹配         |
+| 修饰符 | 描述                                  |
+| ------ | ------------------------------------- |
+| i      | 大小写不敏感                          |
+| g      | 直到找到所有匹配                      |
+| m      | 多行匹配                              |
+| u      | 标明pattern是unicode字符串。ES6新增   |
+| y      | 打开定点模式，与r.lastIndex配合使用。 |
 
 成员变量
 
-| 变量名       | 含义                           |
-| ------------ | ------------------------------ |
-| r.ignoreCase | attributes是否具有i属性        |
-| r.global     | attributes是否具有g属性        |
-| r.mutiline   | attributes是否具有m属性        |
-| r.source     | 得到pattern                    |
-| r.lastIndex  | 整数。开始下一次匹配的字符位置 |
+| 变量名       | 含义                                                |
+| ------------ | --------------------------------------------------- |
+| r.ignoreCase | attributes是否具有i属性                             |
+| r.global     | attributes是否具有g属性                             |
+| r.mutiline   | attributes是否具有m属性                             |
+| r.flags      | 列出所有attributes属性，以"gimuy"的顺序             |
+| r.source     | 得到pattern                                         |
+| r.lastIndex  | 整数。开始下一次匹配的字符位置。与修饰符y配合使用。 |
 
 成员函数
 
@@ -863,6 +896,26 @@ bool与数字
 ## Symbol类型
 
 > 符号类型一般用于防止出现重复名字的属性。
+
+# ES6新增关键字(常用)
+
+| 关键字       | 说明                                                         |
+| ------------ | ------------------------------------------------------------ |
+| let          | 可以支持将变量定义在块作用域中<br />不会像var一样将声明和赋值分开(术语叫提升)<br />在`for(let i=0;i<10;++i)`中，每次循环都会创建一个新的循环变量`i` |
+| const        | 用法和含义同let，只是不可修改。这种不可修改是说指针不可修改而不是值不可修改。 |
+| import       | 从模块中导入某个函数。`import fun from "somefile"`           |
+| export       | 从模块中导出某个函数。`export fun`                           |
+| module       | 导入整个模块。`module some from "somefile"`                  |
+| =>           | 如果闭包函数用=>定义，则可以将真正的调用对象自动绑定到闭包函数中的this上。 |
+| Number.isNaN |                                                              |
+| Symbol       |                                                              |
+| ...[1,2,3]   | 会把[1,2,3]展开为三个独立的变量。可以用在函数形参、数组字面量等任意地方。 |
+| ...rest      | 将几个独立的变量，包装为一个数组，数组名为rest。             |
+| 形参加默认值 |                                                              |
+| 解构         | 包括数组解构、对象解构。解构是一个很庞大的话题，有超级多的应用。 |
+| super        | 当super.xxx()出现在某个对象的方法中时，它代表访问this.prototype.xxx()。 |
+
+
 
 # 生成器
 
@@ -979,20 +1032,6 @@ for(let x of shop()) //结果为输出商店内所有的水果和蔬菜
 | 为undefined赋值        | TypeError          | 可以                           |
 |                        |                    |                                |
 |                        |                    |                                |
-
-# ES6新增关键字
-
-| 关键字       | 说明                                                         |
-| ------------ | ------------------------------------------------------------ |
-| let          | 可以支持将变量定义在块作用域中<br />不会像var一样将声明和赋值分开(术语叫提升)<br />在`for(let i=0;i<10;++i)`中，每次循环都会创建一个新的循环变量`i` |
-| const        | 用法和含义同let，只是不可修改                                |
-| import       | 从模块中导入某个函数。`import fun from "somefile"`           |
-| export       | 从模块中导出某个函数。`export fun`                           |
-| module       | 导入整个模块。`module some from "somefile"`                  |
-| =>           | 如果闭包函数用=>定义，则可以将真正的调用对象自动绑定到闭包函数中的this上。 |
-| Number.isNaN |                                                              |
-| Symbol       |                                                              |
-|              |                                                              |
 
 # 异步机制
 
@@ -1187,7 +1226,17 @@ outputFruit("banana");
 
 # 模块管理
 
+| 名称     | 说明                                            | 典型API |
+| -------- | ----------------------------------------------- | ------- |
+| AMD      | RequireJS使用的方式。异步加载。                 |         |
+| CMD      | SeaJS使用的方式。                               |         |
+| CommonJS | Node.js使用的方式。同步加载。以文件为模块单元。 |         |
+| UMD      | 结合了AMD和CommonJS的方式。                     |         |
+| ES6模式  | 类似于CommonJS。以文件为模块单元。              |         |
+
 # Babel
+
+Babel是这样一个工具，使用它可以把ES6+的代码，转换成ES5的对应形式。
 
 # 总结
 
