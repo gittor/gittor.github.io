@@ -835,6 +835,76 @@ bool与数字
 
 > 符号类型一般用于防止出现重复名字的属性。
 
+# 生成器
+
+## 生成器理论
+
+> 生成器是ES6引进的一个规范，它在工作函数内部，提供了一种特殊的回调机制，对"生产者-消费者"问题提供了一套定义良好的接口。
+> 应用一：预知即将得到一大批数据，总体时间较长，工作函数希望在得到一部分数据后，通知调用者完成了部分工作。此时调用者可以先处理这部分数据。
+> 应用二：工作函数的作用是根据一定的算法，生成一串值。此时可以每生成一个值，向外通知一次。
+
+> 在ES5中，不使用生成器，而是在工作函数的参数列表中加一个回调也可以完成相同的事。
+>
+> 但生成器提供了更多的功能：
+>
+> * for...of支持
+> * 与Promise配合可以以同步方式写异步代码。但在ES6中没有得到很好支持，需要第三方库的支持。
+
+## 生成器原理
+
+```js
+function* generator(){
+  let last = yield 10;
+  yield last+1;
+}
+
+let gen = generator();
+
+console.log(gen.next()); //{ value: 10, done: false }
+console.log(gen.next(100)); //{ value: 101, done: false }
+console.log(gen.next()); //{ value: undefined, done: true }
+```
+
+应该这样理解生成器的工作原理：生成器本身没有挂起、阻塞的说法，应该把yield理解为保存生成器的当前状态。next(value)理解为为生成器提供一个新状态并继续运行。
+
+所以生成器可以运行在事件循环的任意一个时间片内。
+
+## 使用生成器
+
+```js
+function* Fabnaci(maxnum) //定义了一个斐波那契生成器
+{
+    var arg1, arg2;
+
+    while (true) {
+        if (arg1 == undefined) {
+            arg1 = 1;
+            yield 1;
+        }
+        else if (arg2 == undefined) {
+            arg2 = 1;
+            yield 1;
+        }
+        else {
+            let result = arg1+arg2;
+            arg1 = arg2;
+            arg2 = result;
+            yield result;
+        }
+
+        if (arg1 + arg2 >= maxnum) {
+            break;
+        }
+    }
+}
+
+let fab = Fabnaci(500); //定义了一个迭代器
+for(let n of fab)
+{
+    console.log(n);
+}
+```
+
 # 严格模式
 
 `"use strict"`关键字可以开启严格模式。
@@ -889,22 +959,71 @@ bool与数字
 >
 >所以，如何避免工作函数出错，就成了核心问题。有鉴于此，ES提供了Promise标准，从语言本身解决了上面的问题。
 
+## 基于回调的异步
+
+```js
+//异步任务工作函数
+function getFruit(name, callback) {
+  setTimeout(() => {
+    switch(name)
+    {
+      case "apple": callback({"name": "apple", "price": 100}); break;
+      case "banana": callback({"name": "banana", "price": 200}); break;
+      case "orange": callback({"name": "orange", "price": 300}); break;
+    }
+  }, 2000);
+}
+
+//针对异步结果要做的操作
+function outputFruit(fruitobj)
+{
+  console.log(fruitobj);
+}
+
+//启动异步任务
+getFruit("banana", outputFruit);
+```
+
+
+
 ## Promise接口
+
+### 理论
+
+可以把Promise当做回传统回调函数的封装。当`new Promise`时，相当于注册了一个回调，resolve和reject就是调用这个回调。
 
 ### 基础用法
 
 ```js
-var p = new Promise(function(resolve, reject){
-    resolve(1000);
-});
+//将基于回调的异步任务工作函数改写为基于Promise
+function getFruit(name) {
+    return new Promise(function(resolve, reject){
+        setTimeout(() => {
+            switch(name)
+            {
+            case "apple": resolve({"name": "apple", "price": 100}); break;
+            case "banana": resolve({"name": "banana", "price": 200}); break;
+            case "orange": resolve({"name": "orange", "price": 300}); break;
+            }
+        }, 2000);
+    });
+}
 
-p.then(function onfulfill(val){
-    console.log(val);
-},function onreject(err){
-    console.log("onreject:", err.message);
-})
-.catch(function(err){
-    console.log("catch:", err.message);
+//针对异步结果要做的操作
+function outputFruit(fruitobj)
+{
+  console.log(fruitobj);
+}
+
+getFruit("banana").then(
+    function onfulfill(result){
+        outputFruit(result);
+    }
+    ,function onreject(error) {
+        console.log(error);
+    }
+).catch(function(error){
+    console.log(error.message);
 });
 ```
 
@@ -961,72 +1080,61 @@ Promise.race([foo(), timeoutPromise(1000)])
 | `val p = Promise.all([p1, p2]);`   | 数组中所有Promise对象都resolve，结果才resolove。<br />并且onfulfill接收results数组，顺序为[p1.result,p2.result]。<br />如果数组为空，表示成功完成。 |
 | `val p = Promise.race([p1,p2])`    | 只取数组中第一个Promise的决议结果。<br />如果数组为空，则会挂起并且永远不会调用then。所以应该禁止传空数组。 |
 
-## 生成器
-
-### 生成器理论
-
-> 生成器是ES6引进的一个规范，它在工作函数内部，提供了一种特殊的回调机制，对"生产者-消费者"问题提供了一套定义良好的接口。
-> 应用一：预知即将得到一大批数据，总体时间较长，工作函数希望在得到一部分数据后，通知调用者完成了部分工作。此时调用者可以先处理这部分数据。
-> 应用二：工作函数的作用是根据一定的算法，生成一串值。此时可以每生成一个值，向外通知一次。
-
-> 在ES5中，不使用生成器，而是在工作函数的参数列表中加一个回调也可以完成相同的事。
->
-> 但生成器提供了更多的功能：
->
-> * for...of支持
-> * 以同步方式写异步代码
-
-### 使用生成器
-
-```js
-function* Fabnaci(maxnum) //定义了一个斐波那契生成器
-{
-    var arg1, arg2;
-
-    while (true) {
-        if (arg1 == undefined) {
-            arg1 = 1;
-            yield 1;
-        }
-        else if (arg2 == undefined) {
-            arg2 = 1;
-            yield 1;
-        }
-        else {
-            let result = arg1+arg2;
-            arg1 = arg2;
-            arg2 = result;
-            yield result;
-        }
-
-        if (arg1 + arg2 >= maxnum) {
-            break;
-        }
-    }
-}
-
-let fab = Fabnaci(500); //定义了一个迭代器
-for(let n of fab)
-{
-    console.log(n);
-}
-```
-
 ## 生成器与Promise配合
 
 > 基本原理：yield一个Promise，在外部决定调用it.next(...)还是it.throw(...)。
 
-## awit和async
+手工改写例子太复杂了，不建议在工程中使用。事实上很多库都提供了实现。
+
+最好的方式是使用ES7新增的async和await关键字。
+
+## async和await
+
+### 原理
+
+| 关键字 | 实际作用                                                     |
+| ------ | ------------------------------------------------------------ |
+| async  | 当对一个同步方法加上async关键字后，这个方法的返回值会被包装为一个Promise。<br />但最好不要依赖这个机制，不是一个好习惯，而是应该直接返回一个Promise。 |
+| await  | 得到异步方法返回的Promise，并把await所在行及后面的代码，都封装在这个Promise的then里面执行。<br />由于此规定，所以await必须被封装在async函数中运行。 |
+
+### 使用方式
+
+```js
+async function getFruit(name) {
+  return new Promise(function(resolve, reject){
+    setTimeout(() => {
+      switch(name)
+      {
+      case "apple": resolve({"name": "apple", "price": 100});
+      case "banana": resolve({"name": "banana", "price": 200});
+      case "orange": resolve({"name": "orange", "price": 300});
+      }
+  }, 2000);
+  });
+}
+
+async function outputFruit(name)
+{
+  let fruitobj = await getFruit(name);
+  console.log("fruitobj:", fruitobj);
+}
+
+outputFruit("banana");
+```
 
 ## 总结
 
-​	异步机制部分介绍的功能，在ES5中用回调的方式完全可以完成，但一方面是每个人/库写的代码都可能会有bug，另一方面是代码会很容易写得混乱。基于这两点，ES委员会从标准上做了一系列改进，使异步代码更容易写得正确。
+| 版本 | 异步方式                                                     |
+| ---- | ------------------------------------------------------------ |
+| ES5  | 语言只支持异步回调，有第三方的Promise库。                    |
+| ES6  | 语言本身提供了Promise机制，其实质是异步回调的封装。<br />由第三方提供"生成器+异步"形式的库。 |
+| ES7  | 语言本身提供了async和await关键字，进一步封装了"生成器+异步"的方式。 |
+
+# 模块管理系统
 
 # 性能优化
 
 # Babel
-
-# 模块管理系统
 
 # 总结
 
