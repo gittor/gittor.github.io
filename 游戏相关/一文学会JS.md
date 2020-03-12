@@ -1224,6 +1224,30 @@ outputFruit("banana");
 | ES6  | 语言本身提供了Promise机制，其实质是异步回调的封装。<br />由第三方提供"生成器+异步"形式的库。 |
 | ES7  | 语言本身提供了async和await关键字，进一步封装了"生成器+异步"的方式。 |
 
+# 数学库
+
+| 方法          | 含义                  |
+| ------------- | --------------------- |
+| `random();`   | 生成[0,1]之间的随机数 |
+| `ceil(num);`  | 对num进行向上舍入     |
+| `floor(num);` | 对num进行向下舍入     |
+
+## 线性同余随机数
+
+```js
+if(!Math.seed && !Math.seedRandom)
+{
+    Math.seed = 0;
+    Math.seedRandom = function() {
+        Math.seed = (Math.seed * 9301 + 49297) % 233280;
+        var rnd = Math.seed / 233280.0;
+        return rnd;
+    };    
+}
+```
+
+
+
 # 模块管理
 
 | 名称     | 说明                                            | 典型API |

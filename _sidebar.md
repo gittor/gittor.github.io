@@ -4,6 +4,7 @@
 * 游戏相关
     * [3D数学](.\游戏相关\3D数学.md)
     * [CocosCreator总结](.\游戏相关\CocosCreator总结.md)
+    * [CocosJS](.\游戏相关\CocosJS.md)
     * [unity-shader](.\游戏相关\unity-shader.md)
     * [一文学会JS](.\游戏相关\一文学会JS.md)
     * [引擎知识储备](.\游戏相关\引擎知识储备.md)
