@@ -6,3 +6,14 @@
 
 CocosCreator版本：v2.3
 
+# 目录结构
+
+* assets：保存项目所有的代码和资源，会被打包
+  * Scene：所有场景
+  * Script：所有脚本
+  * Texture：所有纹理及图片
+* library：
+* local：
+* packages：
+* settings：
+* temp：

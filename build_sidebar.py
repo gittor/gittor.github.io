@@ -20,7 +20,12 @@ def ShouldIgnore(file_or_path):
     Returns:
         返回file_or_path是否应该被忽略
     '''
-    ignored = [r"游戏实践\jigsaw", ".git"]
+    ignored = [
+        r"游戏实践\jigsaw"
+        ,".git"
+        ,r"游戏相关\electron.md"
+        ,r"游戏相关\CocosCreator总结.md"
+        ]
 
     # print(file_or_path)
 
