@@ -23,7 +23,6 @@ def ShouldIgnore(file_or_path):
     ignored = [
         r"游戏实践\jigsaw"
         ,".git"
-        ,r"游戏相关\electron.md"
         ,r"游戏相关\CocosCreator总结.md"
         ]
 
