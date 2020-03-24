@@ -11,7 +11,28 @@
 import os
 import sys
 
+# ----------------------------------------------------------------
+# 全局配置
+
+# 导出markdown时，每行前面的空格有几个
 StarIndent = 4
+
+# 要导出的根目录文件夹
+WantExport = [
+    "实践项目",
+    "游戏相关",
+    "语言和思想",
+    "工具研究",
+]
+
+# 不导出的文章和目录
+Ignored = [
+    r"实践项目\jigsaw",
+    r"游戏相关\CocosCreator总结.md",
+    r"语言和思想\软件架构总结.md",
+]
+
+# ----------------------------------------------------------------
 
 def ShouldIgnore(file_or_path):
     '''
@@ -20,15 +41,8 @@ def ShouldIgnore(file_or_path):
     Returns:
         返回file_or_path是否应该被忽略
     '''
-    ignored = [
-        r"游戏实践\jigsaw"
-        ,".git"
-        ,r"游戏相关\CocosCreator总结.md"
-        ]
-
-    # print(file_or_path)
-
-    for x in ignored:
+    
+    for x in Ignored:
         if os.path.samefile(file_or_path, x): return True
 
     return False
@@ -99,10 +113,8 @@ def getTotalMD():
     '''
     ret = getTitle()
 
-    for name in os.listdir("."):
-        if os.path.isdir(name):
-            if ShouldIgnore(name): continue
-            ret += getPath(".", name, 0)
+    for name in WantExport:
+        ret += getPath(".", name, 0)
 
     return ret
 
@@ -111,8 +123,9 @@ def main():
     scriptdir = os.path.split(sys.argv[0])[0]
     os.chdir(scriptdir)
     
+    data = getTotalMD()
+
     with open("_sidebar.md", "w", encoding="utf8") as fout:
-        data = getTotalMD()
         fout.write(data)
 
 if __name__ == "__main__":
