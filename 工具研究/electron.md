@@ -10,34 +10,28 @@
 | electron       | https://www.electronjs.org/docs  | 8.11    | 不需要手动操作   |
 | electron-forge | https://www.electronforge.io/    | 5.2.4   | 见下             |
 | vue            | https://cn.vuejs.org/v2/guide/   | 2.6     | cdn引入          |
-| Element        | https://element.eleme.cn/#/zh-CN |         | cdn引入          |
+| ElementUI      | https://element.eleme.cn/#/zh-CN |         | cdn引入          |
 
-> 为什么使用electron
->
-> * 优点：跨平台，技术有前景，轻量。
-> * 缺点：
->   * 发布包很大：由于是桌面应用，所以对发布包大小不是特别敏感
->   * UI响应不如native应用迅速：在可接受范围内
->   * 需要有前端开发经验：这就是需要阅读本教程的原因
+## 为什么使用electron
+* 优点：跨平台，技术有前景，轻量。
+* 缺点：
+  * 发布包很大：由于是桌面应用，所以对发布包大小不是特别敏感
+  * UI响应不如native应用迅速：在可接受范围内
+  * 需要有前端开发经验：这就是需要阅读本教程的原因
 
-> 前端框架的选择
->
-> > 前端开发有两种方式
-> >
-> > 一种是不使用任何框架，纯html+css+js开发。这种方式方式太原始，并且较少社区资源支持。
-> >
-> > 另一种是选择一种前端框架，如react、vue等。我们选择的是vue。
->
-> vue的优点
->
-> * 响应式：数据值改变，自动同步到界面元素。
-> * html逻辑：在html里直接写简单的显示逻辑，不用再拼html字符串。
+## 前端框架的选择
+前端开发有两种方式：
 
-> Element是什么
->
-> Element是基于vue开发的一套桌面风格的UI库。
->
-> 优点：使用简单，界面美观。
+* 一种是不使用任何框架，纯html+css+js开发。这种方式方式太原始，并且较少社区资源支持。
+* 另一种是选择一种前端框架，如react、vue等。我们选择的是vue。
+
+vue的优点
+* 响应式：数据值改变，自动同步到界面元素。
+* html逻辑：在html里直接写简单的显示逻辑，不用再拼html字符串。
+
+## ElementUI是什么
+ElementUI是基于vue开发的一套桌面风格的UI库。
+优点：使用简单，界面美观。
 
 ## 项目概观
 
@@ -90,30 +84,31 @@ npm install -g electron-forge
 > ```html
 > <!DOCTYPE html>
 > <html>
->   <head>
->     <meta charset="UTF-8">
->     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
->     <script src="https://unpkg.com/vue/dist/vue.js"></script>
->     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
->   </head>
+> <head>
+>  <meta charset="UTF-8">
+>  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+>  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+>  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+> </head>
 > 
->   <body>
->     <div id="app">
->       <el-button @click="visible = true">Button</el-button>
->       <el-dialog :visible.sync="visible" title="Hello world">
->         <p>Try Element</p>
->       </el-dialog>
->     </div>
->   </body>
+> <body>
+>  <div id="app">
+>    <el-button @click="visible = true">Button</el-button>
+>    <el-dialog :visible.sync="visible" title="Hello world">
+>      <p>Try Element</p>
+>    </el-dialog>
+>  </div>
+> </body>
 > 
->   <script>
->     new Vue({
->       el: '#app',
->       data: function() {
->         return { visible: false }
->       }
->     })
->   </script>
+> <script>
+>   var data = {
+>     visible: false
+>   }
+>   new Vue({
+>    el: '#app',
+>    data: data,
+>   })
+> </script>
 > </html>
 > ```
 
