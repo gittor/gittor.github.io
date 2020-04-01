@@ -98,6 +98,75 @@ cc.game.run();
 
 # 分辨率设置
 
-# 项目配置文件
+```javascript
+cc.view.enableRetina(false);
 
-# ccui.Button
+//cc.ORIENTATION_PORTRAIT 相当于ORIENTATION_LANDSCAPE_LEFT
+//cc.ORIENTATION_LANDSCAPE_LEFT home键在右
+//cc.ORIENTATION_LANDSCAPE_RIGHT
+//cc.ORIENTATION_PORTRAIT
+//cc.ORIENTATION_PORTRAIT_UPSIDE_DOWN
+cc.view.setOrientation(cc.ORIENTATION_LANDSCAPE);
+
+//EXACT_FIT FIXED_HEIGHT FIXED_WIDTH NO_BORDER SHOW_ALL UNKNOWN
+cc.view.setDesignResolutionSize(800, 450, cc.ResolutionPolicy.SHOW_ALL);
+
+//当浏览器大小改变的时候，canvas的大小自动随之改变
+cc.view.resizeWithBrowserSize(true);
+```
+
+# Director
+
+| 成员       | 作用         |
+| ---------- | ------------ |
+| getWinSize | 取得窗口大小 |
+|            |              |
+|            |              |
+
+# Action
+
+和运行action有关的接口
+
+| 方法                      | 作用 |
+| ------------------------- | ---- |
+| cc.Node.runAction(action) |      |
+|                           |      |
+|                           |      |
+
+Action本身的接口
+
+| 方法             | 作用 |
+| ---------------- | ---- |
+| action.clone()   |      |
+| action.reverse() |      |
+|                  |      |
+
+各种不同的Action
+
+| 方法                                | 作用       |
+| ----------------------------------- | ---------- |
+| cc.moveTo(seconds, pos, posY)       |            |
+| cc.scaleTo(seconds, scaleX, scaleY) |            |
+| cc.rotateTo(seconds, degree)        | 顺时针旋转 |
+| cc.delayTime(seconds)               |            |
+|                                     |            |
+
+
+
+# Layer
+
+纯色Layer
+
+```javascript
+//如果没有设置宽高，则为canvas大小
+cc.LayerColor(cc.color, with=undefined, height=undefined)
+```
+
+渐变Layer
+
+```js
+//gradient_dir
+cc.LayerGradient(startcolor, endcolor, gradient_dir=cc.p(0,-1))
+```
+
+# **cc.sys**
