@@ -125,33 +125,48 @@ cc.view.resizeWithBrowserSize(true);
 
 # Action
 
-和运行action有关的接口
+各种不同的Action
 
-| 方法                      | 作用 |
-| ------------------------- | ---- |
-| cc.Node.runAction(action) |      |
-|                           |      |
-|                           |      |
+| 方法                                                         | 作用                   |
+| ------------------------------------------------------------ | ---------------------- |
+| cc.moveTo/By(seconds, pos, [posY])                           | 移动                   |
+| cc.scaleTo/By(seconds, scaleX, [scaleY])                     | 缩放                   |
+| cc.rotateTo/By(seconds, degree)                              | 顺时针旋转             |
+| cc.skewTo/By(seconds, degreeX, degreeY)                      | 切变效果               |
+| cc.jumpTo/By(seconds, pos, [poyY], height, jumps)            | 跳跃效果               |
+| cc.bezierTo/By(seconds, controlPoints)                       | 贝塞尔曲线             |
+| cc.cardinalSplineTo/By(seconds, controlPoints, tension=[0,1])<br />tension越大，曲线拐点越尖锐 | 基数样条曲线           |
+| cc.catmullRomBy/To(seconds, controlPoints)                   | CatmullRom样条         |
+| cc.blink(seconds, blink_count)                               | 闪烁效果               |
+| cc.fadeIn/Out(seconds)                                       | 淡入淡出               |
+| cc.tintTo/By(seconds, r, g, b)                               | 变色                   |
+| cc.sequence(action1, action2, ...)                           | 产生动作序列           |
+| cc.spawn(action1, action2, ...)                              | 同时运行动作           |
+| cc.delayTime(seconds)                                        | 暂停执行               |
+| cc.callFunc(func(action, arg0, arg1, ...), obj, arg0, arg1, ...) | 回调执行               |
+| cc.follow(target, follow_rect)                               | 跟随target             |
+| cc.speed(action, speed=1)                                    | 改变action执行速度     |
+| cc.targetedAction(node, action)                              | 强制在node上执行action |
+| cc.animate(cc.Animation)                                     | 序列帧动画             |
+| cc.GridAction*                                               | 网格动画簇             |
+| cc.ActionEase*                                               | 调整播放节奏的动作簇   |
 
 Action本身的接口
 
-| 方法             | 作用 |
-| ---------------- | ---- |
-| action.clone()   |      |
-| action.reverse() |      |
-|                  |      |
+| 方法                        | 作用               |
+| --------------------------- | ------------------ |
+| action.clone()              | 返回克隆对象       |
+| action.reverse()            | 返回反过程         |
+| action.repeat(repeat_count) | 返回重复执行对象   |
+| action.repeatForever()      | 返回永远重复的动作 |
 
-各种不同的Action
+和运行action有关的接口
 
-| 方法                                | 作用       |
-| ----------------------------------- | ---------- |
-| cc.moveTo(seconds, pos, posY)       |            |
-| cc.scaleTo(seconds, scaleX, scaleY) |            |
-| cc.rotateTo(seconds, degree)        | 顺时针旋转 |
-| cc.delayTime(seconds)               |            |
-|                                     |            |
-
-
+| 方法                      | 作用                         |
+| ------------------------- | ---------------------------- |
+| cc.Node.runAction(action) |                              |
+| cc.Node.pause()           | 停止所有selector和action     |
+| cc.Node.resume()          | 继续运行所有selector和action |
 
 # Layer
 
