@@ -1,3 +1,22 @@
 :root {
 	--code-theme-background : rgb(250,250,230);
+
+
+	/* Tables */
+    --table-body-border-color           : ;
+    --table-body-border-width           : 1px;
+    --table-cell-border-color           : ;
+    --table-cell-border-width           : 1px;
+    --table-cell-padding                : 0.75em 0.5em;
+    --table-head-background             : ;
+    --table-head-border-color           : var(--table-cell-border-color);
+    --table-head-border-width           : 1px;
+    --table-head-font-weight            : var(--strong-font-weight);
+    /*--table-row-even-background         : ;*/
+    /*--table-row-odd-background          : var(--mono-tint3);*/
+
+    --heading-h1-font-size              : var(--font-size-xxl);
+    --heading-h2-font-size              : var(--font-size-l);
+    --heading-h3-font-size              : var(--font-size-m);
+    
 }
