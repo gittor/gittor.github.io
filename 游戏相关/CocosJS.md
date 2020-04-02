@@ -190,18 +190,79 @@ cc.view.resizeWithBrowserSize(true);
 
 # Layer
 
-纯色Layer
+## 纯色Layer
 
 ```javascript
 //如果没有设置宽高，则为canvas大小
-cc.LayerColor(cc.color, with=undefined, height=undefined)
+new cc.LayerColor(cc.color, with=undefined, height=undefined)
 ```
 
-渐变Layer
+## 渐变Layer
 
 ```js
 //gradient_dir
-cc.LayerGradient(startcolor, endcolor, gradient_dir=cc.p(0,-1))
+new cc.LayerGradient(startcolor, endcolor, gradient_dir=cc.p(0,-1))
 ```
 
-# **cc.sys**
+## Layer组合
+
+```js
+var layers = new cc.LayerMultiplex(layer0, layer1, ...);
+layers.switchTo(n);
+```
+
+
+
+# Menu
+
+Menu定义了按钮的行为，与之相关的有两个接口：
+
+| 接口                  | 作用            |
+| --------------------- | --------------- |
+| cc.Menu               | 管理cc.MenuItem |
+| 实现了cc.MenuItem的类 | 具体的可点击项  |
+
+## cc.Menu
+
+| 方法                                                  | 作用                        |
+| ----------------------------------------------------- | --------------------------- |
+| new cc.Menu(item1, item2, ...)                        |                             |
+| menu.alignItemsVertically()                           |                             |
+| menu.alignItemsInColumns(col0_count, col1_count, ...) | 第0列有col0_count个item，…… |
+| menu.children                                         | 所有MenuItem                |
+
+## cc.MenuItemSprite
+
+```js
+var item1 = new cc.MenuItemSprite(normal, selected, disabled, callback, this);
+```
+
+## cc.MenuItemImage
+
+```js
+var item2 = new cc.MenuItemImage(normal, selected, disabled, callback, this);
+
+var item2 = new cc.MenuItemImage("#normalName", "#selectedName", callback, this);
+```
+
+## cc.MenuItemLabel
+
+```js
+var item3 = new cc.MenuItemLabel(label, callback, this);
+```
+
+## cc.MenuItemFont
+
+```js
+var item4 = new cc.MenuItemFont("title", callback, this);
+```
+
+## cc.MenuItemToggle
+
+```js
+var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., callback, this);
+```
+
+
+
+# cc.sys
