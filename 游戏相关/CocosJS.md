@@ -435,6 +435,39 @@ event.stopPropagation();
 listener.setEnabled(enabled);
 ```
 
+# 场景管理
+
+运行场景
+
+```js
+//替换当前正运行的scene
+director.runScene(scene);
+director.runScene(new cc.TransitionSlideInT(seconds, scene));
+
+//scene入栈
+director.pushScene(scene);
+director.pushScene(new cc.TransitionSlideInT(seconds, scene));
+
+//scene出栈
+director.popScene();
+```
+
+添加常驻节点
+
+```js
+//场景切换时，所有的内容都会被删除
+//如果希望有常驻的节点，例如悬浮窗，可以通过此接口设置。
+cc.director.setNotificationNode(node);
+cc.director.setNotificationNode(null);
+```
+
+事件回调
+
+```js
+//当场景切换动画完成时被调用
+cc.Node.onEnterTransitionDidFinish();
+```
+
 
 
 # 坐标转换

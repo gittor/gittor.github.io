@@ -27,12 +27,18 @@
       name: '张章',
       repo: 'https://github.com/gittor/gittor.github.io',
       loadSidebar: true,
-      subMaxLevel: 2, //在侧边栏开启目录功能，最多展开到subMaxLevel级目录
+      subMaxLevel: 1, //在侧边栏开启目录功能，最多展开到subMaxLevel级目录
       homepage: 'home.md',
+
       disqus: 'shortname',
+
+      search: 'auto',
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+
+  <!-- 搜索插件 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
 
   <!-- markdown显示数学公式的插件 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
@@ -45,6 +51,7 @@
   <!-- 评论插件 -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/disqus.min.js"></script>
 
+  <!-- 添加复制代码按钮 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
   
 </body>
