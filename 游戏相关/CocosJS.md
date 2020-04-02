@@ -266,3 +266,114 @@ var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., callback, this);
 
 
 # cc.sys
+
+# 事件系统
+
+## 单点触摸
+
+```js
+if( 'touches' in cc.sys.capabilities ) {
+    cc.eventManager.addListener({
+        event: cc.EventListener.TOUCH_ONE_BY_ONE,
+        swallowTouches: true,
+        onTouchBegan: this.onTouchBegan,
+        onTouchMoved: this.onTouchMoved,
+        onTouchEnded: this.onTouchEnded,
+        onTouchCancelled: this.onTouchCancelled
+    }, this);
+}
+
+onTouchBegan:function(touch, event) {
+    touch.getLocation(); //世界坐标，原点在左下角
+    touch.getID();
+    event.getCurrentTarget();
+    return true;
+}
+```
+
+## 多点触摸
+
+```js
+if( 'touches' in cc.sys.capabilities ) {
+    cc.eventManager.addListener({
+        event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+        onTouchesBegan: this.onTouchesBegan,
+        onTouchesMoved: this.onTouchesMoved,
+        onTouchesEnded: this.onTouchesEnded,
+        onTouchesCancelled: this.onTouchesCancelled
+    }, this);
+}
+
+onTouchesBegan:function(touches, event) {
+    for (var i=0; i < touches.length;i++ ) {
+        var touch = touches[i];
+    }
+    //不需要返回值
+},
+```
+
+## 加速器
+
+```js
+if( 'accelerometer' in cc.sys.capabilities ) {
+    var self = this;
+    // call is called 30 times per second
+    cc.inputManager.setAccelerometerInterval(1/30); //加速器回调的调用间隔
+    cc.inputManager.setAccelerometerEnabled(true);
+    cc.eventManager.addListener({
+        event: cc.EventListener.ACCELERATION,
+        callback: function(accelEvent, event){
+            accelEvent.x;
+            accelEvent.y;
+            accelEvent.z;
+            accelEvent.timestamp;
+        }
+    }, this);
+}
+```
+
+## 鼠标事件
+
+```js
+if( 'mouse' in cc.sys.capabilities ) {
+    cc.eventManager.addListener({
+        event: cc.EventListener.MOUSE,
+        onMouseDown: function(event){
+            var pos = event.getLocation();
+            var target = event.getCurrentTarget();
+            if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
+                cc.log("onRightMouseDown at: " + pos.x + " " + pos.y );
+            else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
+                cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y );
+        },
+        onMouseMove: function(event){
+        },
+        onMouseUp: function(event){
+        }
+    }, this);
+}
+```
+
+## 键盘事件
+
+```js
+if ('keyboard' in cc.sys.capabilities) {
+    cc.eventManager.addListener({
+        event: cc.EventListener.KEYBOARD,
+        onKeyPressed: function (keycode, event) {
+            //keycode===cc.KEY
+        },
+        onKeyReleased: function (keycode, event) {
+            
+        }
+    }, this);
+}
+```
+
+## 自定义事件
+
+# 坐标转换
+
+* 世界坐标
+* 屏幕坐标
+* 局部坐标
