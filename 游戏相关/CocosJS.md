@@ -269,6 +269,8 @@ var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., callback, this);
 
 # 事件系统
 
+基本原则：自己添加的事件，必须显式移除。
+
 ## 单点触摸
 
 ```js
@@ -371,6 +373,69 @@ if ('keyboard' in cc.sys.capabilities) {
 ```
 
 ## 自定义事件
+
+```js
+//1.定义事件唯一标识符
+var MyEventName = "game_custom_event1";
+
+//2.注册事件接收器
+this._listener1 = cc.EventListener.create({
+    event: cc.EventListener.CUSTOM,
+    eventName: MyEventName,
+    callback: function(event){
+        event.getUserData();
+    }
+});
+cc.eventManager.addListener(this._listener1, 1);
+
+//3.发射事件
+var event = new cc.EventCustom(MyEventName);
+event.setUserData(data);
+cc.eventManager.dispatchEvent(event);
+
+//4.onExit时移除事件接收器
+cc.eventManager.removeListener(this._listener1);
+```
+
+## Director事件
+
+```js
+//添加事件监听
+//EVENT_AFTER_UPDATE
+//EVENT_AFTER_VISIT
+//EVENT_AFTER_DRAW
+//EVENT_PROJECTION_CHANGED
+this._event1 = cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_UPDATE, function(event){
+    
+});
+
+cc.eventManager.removeListener(this._event1);
+```
+
+
+
+## 其他接口
+
+```js
+//priority越小，优先级越高
+cc.eventManager.addListener(listener, nodeOrPriority);
+
+cc.eventManager.removeListener(listener1);
+
+//移除游戏中所有的事件，会导致所有按钮不可用，一般用不到这个方法
+cc.eventManager.removeAllListeners();
+
+//暂停node的所有事件监听
+cc.eventManager.pauseTarget(node, recursive);
+
+//停止事件继续传播
+event.stopPropagation();
+
+//关闭监听或打开继续监听
+listener.setEnabled(enabled);
+```
+
+
 
 # 坐标转换
 
