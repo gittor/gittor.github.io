@@ -17,7 +17,8 @@
 
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/external-script.min.js"></script>
 
-
+  <!-- 目录插件 -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/docsify-toc@1.0.0/dist/toc.css"> -->
 </head>
 <body>
 
@@ -30,9 +31,13 @@
       subMaxLevel: 1, //在侧边栏开启目录功能，最多展开到subMaxLevel级目录
       homepage: 'home.md',
 
-      disqus: 'shortname',
-
       search: 'auto',
+
+      toc: {
+        scope: '.markdown-section',
+        headings: 'h1, h2, h3, h4, h5, h6',
+        title: 'Table of Contents',
+      },
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
@@ -48,11 +53,13 @@
   <!-- 官网: https://jhildenbiddle.github.io/docsify-themeable/#/ -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0"></script>
 
-  <!-- 评论插件 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/disqus.min.js"></script>
+  <!-- 评论插件，未添加，主页 https://github.com/daidi/docsify-valine/ -->
 
   <!-- 添加复制代码按钮 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
   
+  <!-- 目录插件。不太好用，暂时屏蔽 -->
+  <!-- <script src="https://unpkg.com/docsify-toc@1.0.0/dist/toc.js"></script> -->
+
 </body>
 </html>
