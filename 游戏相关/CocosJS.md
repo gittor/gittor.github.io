@@ -254,7 +254,10 @@ var item3 = new cc.MenuItemLabel(label, callback, this);
 ## cc.MenuItemFont
 
 ```js
-var item4 = new cc.MenuItemFont("title", callback, this);
+var item = new cc.MenuItemFont("title", callback, this);
+item.fontName = "Arial";
+item.fontSize = 32;
+item.setString("title");
 ```
 
 ## cc.MenuItemToggle
@@ -265,9 +268,7 @@ var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., callback, this);
 
 
 
-# cc.sys
-
-# 事件系统
+# Event
 
 基本原则：自己添加的事件，必须显式移除。
 
@@ -435,7 +436,7 @@ event.stopPropagation();
 listener.setEnabled(enabled);
 ```
 
-# 场景管理
+# Scene
 
 运行场景
 
@@ -466,6 +467,78 @@ cc.director.setNotificationNode(null);
 ```js
 //当场景切换动画完成时被调用
 cc.Node.onEnterTransitionDidFinish();
+```
+
+# Label
+
+## cc.LabelAtlas
+
+```js
+var label1 = new cc.LabelAtlas("title", "fonts/tuffy_bold_italic-charmap.plist");
+
+label1.setString("title");
+```
+
+## cc.LabelBMFont
+
+```js
+var label1 = new cc.LabelBMFont("title", "fonts/bitmapFontTest2.fnt");
+
+//可以针对每个字符做操作，只有LabelBMFont支持
+var char0 = label1.getChildByTag(0);
+
+//水平对齐方式：cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_RIGHT
+//LabelBMFont没有垂直对齐
+label1.textAlign;
+
+//整个label的宽度
+label1.boundingWidth;
+
+//文字部分的宽高
+label1.width;
+label1.height;
+```
+
+## cc.LabelTTF
+
+```js
+var label = new cc.LabelTTF("title", fontName="Arial", fontSize=16, blockSize= cc.size(0,0), horizAlign=cc.TEXT_ALIGNMENT_LEFT, vertAlign=cc.VERTICAL_TEXT_ALIGNMENT_TOP);
+
+//文字部分的大小
+label.boundingWidth;
+label.boundingHeight;
+
+//设置整体框大小
+label.setDimensions(width, height);
+
+//cc.TEXT_ALIGNMENT_LEFT|cc.TEXT_ALIGNMENT_CENTER|cc.TEXT_ALIGNMENT_RIGHT
+label.setHorizontalAlignment(halign);
+//cc.VERTICAL_TEXT_ALIGNMENT_TOP|cc.VERTICAL_TEXT_ALIGNMENT_CENTER|cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM
+label.setVerticalAlignment(valign);
+
+```
+
+字体阴影
+
+```js
+// font definition
+var fontDef = new cc.FontDefinition();
+fontDef.fontName = "Arial";
+fontDef.fontSize = 32;
+fontDef.textAlign = cc.TEXT_ALIGNMENT_LEFT;
+fontDef.verticalAlign = cc.VERTICAL_TEXT_ALIGNMENT_TOP;
+fontDef.fillStyle = cc.color(255,255,233);
+fontDef.boundingWidth = 300;
+fontDef.boundingHeight = 200;
+// shadow
+fontDef.shadowEnabled = true;
+fontDef.shadowOffsetX = 6;
+fontDef.shadowOffsetY = -3;
+// stroke，只在移动设备上支持
+fontDef.strokeEnabled = true;
+fontDef.strokeStyle = cc.color(0,0,0);
+
+var label = new cc.LabelTTF("title", fontDef);
 ```
 
 
