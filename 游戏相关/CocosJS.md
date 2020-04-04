@@ -576,6 +576,8 @@ var label = new cc.LabelTTF("title", fontDef);
 
 # Node
 
+## cc.Node
+
 ```js
 //rect.origin是node左下角的坐标
 var rect = node.getBoundingBox();
@@ -583,6 +585,25 @@ var rect = node.getBoundingBox();
 //重排子节点的zOrder
 node.reorderChild(child, newZOrder);
 ```
+
+## cc.ClippingNode
+
+```js
+var clipper = new cc.ClippingNode();
+//默认是false，只显示模板以内的部分。如果是true，只显示模板外的部分
+clipper.setInverted(true);
+//
+clipper.alphaThreshold = 1;
+this.addChild(clipper);
+
+var stencil = new cc.DrawNode();
+clipper.stencil = stencil;
+
+var content = new cc.Sprite("sprite.png");
+clipper.addChild(content);
+```
+
+
 
 # Sprite
 
