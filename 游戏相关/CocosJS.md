@@ -133,6 +133,14 @@ cc.view.resizeWithBrowserSize(true);
 | cc.bezierBy/cc.bezierTo |      |
 | cc.fadeIn/cc.fadeOut    |      |
 
+```js
+var act = cc.moveBy(2, cc.p(100,100));
+node.runAction(act);
+node2.runAction(act.clone());
+```
+
+
+
 ## 直接设置属性类
 
 | 方法                | 作用            |
@@ -142,12 +150,28 @@ cc.view.resizeWithBrowserSize(true);
 | cc.toggleVisibility | 切换visible属性 |
 | cc.removeSelf       | 移除自身        |
 
+```js
+var act = cc.hide();
+node.runAction(act);
+```
+
+
+
 ## 动作组合类
 
 | 方法        | 作用     |
 | ----------- | -------- |
 | cc.sequence | 依次运行 |
 | cc.spawn    | 同时运行 |
+
+```js
+var act1 = cc.moveBy(2, 100, 100);
+var act2 = cc.blink(3, 5);
+var comb = cc.spawn(act1, act2);
+node.runAction(comb);
+```
+
+
 
 ## 网格动画类
 
@@ -156,12 +180,30 @@ cc.view.resizeWithBrowserSize(true);
 | cc.shaky3D |      |
 | cc.waves   |      |
 
+```js
+var nodeGrid = new cc.NodeGrid();
+
+nodeGrid.addChild(child);
+
+nodeGrid.runAction(cc.shaky3D( duration, cc.size(15,10), 5, false ));
+```
+
+nodeGrid本身没有显式效果，所有效果会作用在nodeGrid的所有子节点上。
+
 ## 节奏控制类
 
 | 方法           | 作用                 |
 | -------------- | -------------------- |
 | cc.ActionEase* | 控制action的运动节奏 |
 | cc.delayTime   | 延时                 |
+
+```js
+var move = cc.moveBy(2, 100, 100);
+var move_ease_in = move.clone().easing(cc.easeIn(2.0));
+node.runAction(move_ease_in);
+```
+
+
 
 ## 其他
 
@@ -173,12 +215,13 @@ cc.view.resizeWithBrowserSize(true);
 
 ## Action本身的接口
 
-| 方法                        | 作用               |
-| --------------------------- | ------------------ |
-| action.clone()              | 返回克隆对象       |
-| action.reverse()            | 返回反过程         |
-| action.repeat(repeat_count) | 返回重复执行对象   |
-| action.repeatForever()      | 返回永远重复的动作 |
+| 方法                        | 作用                           |
+| --------------------------- | ------------------------------ |
+| action.clone()              | 返回克隆对象                   |
+| action.reverse()            | 返回反过程                     |
+| action.repeat(repeat_count) | 返回重复执行对象               |
+| action.repeatForever()      | 返回永远重复的动作             |
+| action.easing(eas_action)   | 返回使用了eas_action效果的动作 |
 
 ## 和运行action有关的接口
 
@@ -471,7 +514,7 @@ listener.setEnabled(enabled);
 
 # Scene
 
-运行场景
+## 运行场景
 
 ```js
 //替换当前正运行的scene
@@ -486,7 +529,7 @@ director.pushScene(new cc.TransitionSlideInT(seconds, scene));
 director.popScene();
 ```
 
-添加常驻节点
+## 添加常驻节点
 
 ```js
 //场景切换时，所有的内容都会被删除
@@ -495,7 +538,7 @@ cc.director.setNotificationNode(node);
 cc.director.setNotificationNode(null);
 ```
 
-事件回调
+## 场景切换事件
 
 ```js
 //当场景切换动画完成时被调用
@@ -705,6 +748,74 @@ node.scheduleUpdateWithPriority(priority);
 node.unscheduleAllCallbacks();
 
 ```
+
+# Audio
+
+cocos中共集成了几种音效接口
+
+## AudioEngine
+
+### 播放背景音乐
+
+```js
+//播放/停止
+cc.audioEngine.playMusic("music.mp3", loop);
+cc.audioEngine.stopMusic();
+
+//暂停/继续
+cc.audioEngine.pauseMusic();
+cc.audioEngine.resumeMusic();
+
+//重新从头播放音乐
+cc.audioEngine.rewindMusic();
+
+//
+cc.audioEngine.isMusicPlaying();
+
+//设置音效声音，范围[0,1]
+cc.audioEngine.setMusicVolume(cc.audioEngine.getMusicVolume() + 0.1);
+```
+
+### 播放音效
+
+```js
+//播放/停止
+var soundId = cc.audioEngine.playEffect(EFFECT_FILE, loop);
+cc.audioEngine.stopEffect(soundId);
+cc.audioEngine.stopAllEffects();
+
+//暂停/继续
+cc.audioEngine.pauseEffect(soundId);
+cc.audioEngine.resumeEffect(soundId);
+
+//暂停所有音效
+cc.audioEngine.pauseAllEffects();
+cc.audioEngine.resumeAllEffects();
+
+//
+cc.audioEngine.unloadEffect(EFFECT_FILE);
+
+//设置音效声音，范围[0,1]
+cc.audioEngine.setEffectsVolume(cc.audioEngine.getEffectsVolume() + 0.1);
+```
+
+
+
+# cc.sys
+
+## cc.sys.language
+
+```js
+switch(cc.sys.language)
+{
+    case cc.sys.LANGUAGE_ENGLISH:
+        break;
+    case cc.sys.LANGUAGE_CHINESE:
+        break;
+}
+```
+
+
 
 # 坐标转换
 
