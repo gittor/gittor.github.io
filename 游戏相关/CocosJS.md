@@ -280,7 +280,19 @@ item.setString("title");
 ## cc.MenuItemToggle
 
 ```js
-var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., callback, this);
+var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., function (){
+    switch (sender.getSelectedIndex()) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+    }
+    
+    sender.getSubItems();
+    sender.addSubItem(item);
+}, this);
 ```
 
 
@@ -574,6 +586,8 @@ node.reorderChild(child, newZOrder);
 
 # Sprite
 
+## cc.Sprite
+
 ```js
 var sprite = new cc.Sprite("image.png");
 var sprite = new cc.Sprite(texture);
@@ -585,9 +599,28 @@ var sprite = new cc.Sprite("#grossini_dance_01.png"); //从cc.spriteFrameCache�
 sprite.setBlendFunc(src, dst);
 ```
 
+## cc.Scale9Sprite
+
+```js
+//会优先从cc.spriteFrameCache中提取文件
+var blocks = new cc.Scale9Sprite('blocks9.png');
+
+//capInsets:cc.rect 四个数字分别代表左侧宽，上边高，右侧宽，下边高
+var blocks = new cc.Scale9Sprite();
+blocks.updateWithBatchNode(cc.SpriteBatchNode, originalRect, rotated, capInsets);
+```
+
+## cc.SpriteBatchNode
+
+```js
+var batch = new cc.SpriteBatchNode("sprite.png");
+var sprite = new cc.Sprite(batch.texture);
+batch.addChild(sprite);
+```
 
 
-# scheduler
+
+# Scheduler
 
 ## 内置的定时类
 
