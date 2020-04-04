@@ -646,6 +646,18 @@ var content = new cc.Sprite("sprite.png");
 clipper.addChild(content);
 ```
 
+## cc.DrawNode
+
+```js
+var draw = new cc.DrawNode();
+this.addChild(draw);
+
+draw.drawDot(pos, radius, color);
+draw.drawRect(origin, destination, fillColor, lineWidth, lineColor);
+draw.drawSegment(from, to, lineWidth, color);
+draw.drawCircle(center, radius, angle, segments, drawLineToCenter, lineWidth, color);
+```
+
 
 
 # Sprite
@@ -797,6 +809,63 @@ cc.audioEngine.unloadEffect(EFFECT_FILE);
 
 //设置音效声音，范围[0,1]
 cc.audioEngine.setEffectsVolume(cc.audioEngine.getEffectsVolume() + 0.1);
+```
+
+# Loader
+
+直接加载资源，results存储了资源对应的cocos对象。
+
+```js
+var res = ["a.png", "b.png"];
+cc.loader.load(res, function(err, results){
+    if(err){
+        cc.log("Failed to load %s.", res);
+        return;
+    }
+});
+
+//加载完成后，可以通过getRes得到
+cc.loader.getRes(name);
+
+//如果不想要，可以通过release释放
+cc.loader.release(name);
+```
+
+加载图集到cc.spriteFramesCache
+
+```js
+cc.loader.loadAliases("name.plist", function(){
+    var sprite = new cc.Sprite("grossini.bmp");
+    self.addChild( sprite, 100);
+    sprite.x = winSize.width/2;
+    sprite.y = winSize.height/2;
+});
+```
+
+注册自定义的文件加载规则
+
+```js
+cc.loader.register(["mpx"], {
+    load: function(realUrl, url, res, cb){
+        
+        //此函数只负责一个url的加载
+        //如果调用者用数组调用load方法，则cocos会合并每个资源的加载结果并返回给调用者
+        
+        //调用者-->cocos-->load
+        
+        //realUrl: 可以传递给文件系统使用的文件名
+        //url: 调用者传递的参数
+        //res: 
+        //cb(error, results): 当所有内容加载完成后，用此函数通知cocos已经加载完成，cocos会处理接下来的步骤。
+    }
+});
+
+cc.loader.load(["data.mpx"], function(error, results){
+    if(err){
+        cc.log("Failed to load data.mpx");
+        return;
+    }
+});
 ```
 
 
