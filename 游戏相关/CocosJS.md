@@ -359,12 +359,16 @@ if( 'mouse' in cc.sys.capabilities ) {
     cc.eventManager.addListener({
         event: cc.EventListener.MOUSE,
         onMouseDown: function(event){
+            
+            //原点在屏幕左下角
             var pos = event.getLocation();
+            
             var target = event.getCurrentTarget();
-            if(event.getButton() === cc.EventMouse.BUTTON_RIGHT)
-                cc.log("onRightMouseDown at: " + pos.x + " " + pos.y );
-            else if(event.getButton() === cc.EventMouse.BUTTON_LEFT)
-                cc.log("onLeftMouseDown at: " + pos.x + " " + pos.y );
+            
+            //cc.EventMouse.BUTTON_LEFT
+            //cc.EventMouse.BUTTON_RIGHT
+            //cc.EventMouse.BUTTON_MIDDLE
+            event.getButton();
         },
         onMouseMove: function(event){
         },
@@ -558,11 +562,27 @@ fontDef.strokeStyle = cc.color(0,0,0);
 var label = new cc.LabelTTF("title", fontDef);
 ```
 
-# cc.Node
+# Node
 
 ```js
 //rect.origin是node左下角的坐标
 var rect = node.getBoundingBox();
+
+//重排子节点的zOrder
+node.reorderChild(child, newZOrder);
+```
+
+# Sprite
+
+```js
+var sprite = new cc.Sprite("image.png");
+var sprite = new cc.Sprite(texture);
+var sprite = new cc.Sprite("#grossini_dance_01.png"); //从cc.spriteFrameCache中选取一张图片
+
+//设置混合函数
+//src:cc.ZERO, cc.ONE, cc.DST_COLOR, cc.ONE_MINUS_DST_COLOR, cc.DST_ALPHA, cc.ONE_MINUS_DST_ALPHA
+//dst:cc.ZERO, cc.ONE, cc.SRC_COLOR, cc.ONE_MINUS_SRC_COLOR, cc.SRC_ALPHA, cc.ONE_MINUS_SRC_ALPHA
+sprite.setBlendFunc(src, dst);
 ```
 
 
