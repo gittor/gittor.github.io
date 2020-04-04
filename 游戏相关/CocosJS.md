@@ -188,6 +188,23 @@ cc.view.resizeWithBrowserSize(true);
 | cc.Node.pause()           | 停止所有selector和action     |
 | cc.Node.resume()          | 继续运行所有selector和action |
 
+## cc.ActionManager
+
+cc中有一个默认的ActionManager，更新函数注册在cc.director.getScheduler()中。
+
+---
+
+也可以创建多个ActionManager：
+
+```js
+var actionMan = new cc.ActionManager();
+scheduler.scheduleUpdateForTarget(actionMan, 0, false);
+
+node.setActionManager(actionMan);
+```
+
+通过控制scheduler的更新速度来控制ActionManager的更新速度。
+
 # Layer
 
 ## 纯色Layer
@@ -552,12 +569,67 @@ var rect = node.getBoundingBox();
 
 # scheduler
 
-## cc.Node
+## 内置的定时类
+
+* cc.Scheduler：
+  * 定时器管理类，可以new出多个对象，cc.director有一个总定时器对象
+* cc.ActionManager：
+  * Action管理类，可以new出多个对象，cc.director.scheduler有一个总Action管理类
+
+## 主要接口
+
+如果对一个函数多次注册，则只有最后一次注册的会有效。
+
+```js
+var scheduler = cc.director.getScheduler();
+
+//注册自定义的回调函数
+scheduler.schedule(this.callback, this, interval, paused);
+
+//注册update回调，每帧回调一次
+scheduler.scheduleUpdateForTarget(target, priority, paused);
+scheduler.unscheduleUpdateForTarget(target);
+
+//暂停/开始所有的更新事件，包括update、selector等
+scheduler.pauseTarget(target);
+scheduler.resumeTargets(target);
+
+//取消所有回调，包括update和自定义回调
+scheduler.unscheduleAllCallbacks();
+scheduler.unscheduleAllCallbacksForTarget(target);
+//只取消update回调
+scheduler.unscheduleUpdate();
+scheduler.unscheduleUpdateForTarget(target);
+
+//数值越小，更新越慢
+scheduler.setTimeScale(1.0);
+```
+
+## 创建多个scheduler
+
+```js
+this._newScheduler = new cc.Scheduler();
+this._newActionManager = new cc.ActionManager();
+
+node.setActionManager(this._newActionManager);
+node.setScheduler(this._newScheduler);
+
+cc.director.getScheduler().scheduleUpdateForTarget(this._newScheduler, 0, false);
+this._newScheduler.scheduleUpdateForTarget(this._newActionManager, 0, false);
+```
+
+## cc.Node提供的接口
 
 ```js
 //将node绑定到callback的this上
-//
-node.schedule(callback);
+//内部调用了cc.director.getScheduler().scheduleUpdateForTarget(this, 0, false);
+node.schedule(callback, tick_seconds=0, tick_count=4294967294);
+
+node.scheduleUpdate();
+node.scheduleUpdateWithPriority(priority);
+
+node.unscheduleAllCallbacks();
+
 ```
 
 # 坐标转换
