@@ -248,6 +248,32 @@ node.setActionManager(actionMan);
 
 通过控制scheduler的更新速度来控制ActionManager的更新速度。
 
+# MotionStreak
+
+```js
+//fade_seconds=一个treak item经过多长时间消失
+//minimum_segment_size=target移动多少，产生一个treak item
+//texture_size=拖尾的大小，像素单位
+//color=拖尾的颜色
+//texture_or_texturename=拖尾使用的图
+var streak = new cc.MotionStreak(fade_seconds, minimum_segment_size, texture_size, color, texture_or_texturename);
+
+//需要注意的是，MotionStreak是在世界空间中工作的，所以设置位置时要使用世界空间
+cc.eventManager.addListener({
+    event: cc.EventListener.TOUCH_ALL_AT_ONCE,
+    onTouchesMoved:function (touches, event) {
+        if (touches.length == 0)
+            return;
+
+        var touchLocation = touches[0].getLocation();
+        streak.setPosition(touchLocation);
+    }
+}, this);
+
+```
+
+
+
 # Layer
 
 ## 纯色Layer
