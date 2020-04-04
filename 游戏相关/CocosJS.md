@@ -541,10 +541,36 @@ fontDef.strokeStyle = cc.color(0,0,0);
 var label = new cc.LabelTTF("title", fontDef);
 ```
 
+# cc.Node
 
+```js
+//rect.origin是node左下角的坐标
+var rect = node.getBoundingBox();
+```
+
+
+
+# scheduler
+
+## cc.Node
+
+```js
+//将node绑定到callback的this上
+//
+node.schedule(callback);
+```
 
 # 坐标转换
 
 * 世界坐标
 * 屏幕坐标
 * 局部坐标
+
+```js
+//返回的localpos为相对于(0,0)点的坐标
+var localpos = node.convertToNodeSpace(worldpos);
+
+//anchor relative，返回的localpos为相对于anchor的坐标
+var localpos = node.convertToNodeSpaceAR(worldpos);
+```
+
