@@ -125,7 +125,7 @@ cc.view.resizeWithBrowserSize(true);
 
 # Action
 
-## 属性动画类
+## Node属性动画类
 
 | 方法                    | 作用 |
 | ----------------------- | ---- |
@@ -139,9 +139,36 @@ node.runAction(act);
 node2.runAction(act.clone());
 ```
 
+## ProgressTimer属性动画类
 
+只能作用在cc.ProgressTimer对象上
 
-## 直接设置属性类
+| 方法              | 作用 |
+| ----------------- | ---- |
+| cc.progressFromTo |      |
+| cc.progressTo     |      |
+
+```js
+var action = cc.progressFromTo(2, 0, 100);
+var progress = new cc.ProgressTimer(new cc.Sprite("*.png"));
+
+//cc.ProgressTimer.TYPE_RADIAL 时钟动画
+//cc.ProgressTimer.TYPE_BAR 进度条动画
+progress.type = cc.ProgressTimer.TYPE_BAR;
+
+//
+progress.reverseDir = true;
+
+//动画的起始点
+progress.midPoint = cc.p(x, y);
+
+//x,y的范围为[0,1]，0代表此方向上没有动画，1代表完全动画
+progress.barChangeRate = cc.p(x, y);
+
+progress.runAction(action);
+```
+
+## 立即设置属性类
 
 | 方法                | 作用            |
 | ------------------- | --------------- |
@@ -880,6 +907,14 @@ var sprite = new cc.Sprite(batch.texture);
 batch.addChild(sprite);
 ```
 
+# Particle
+
+```js
+var particleSystem = new cc.ParticleSystem("particle.plist");
+particleSystem.setAutoRemoveOnFinish(true);
+this.addChild(particleSystem);
+```
+
 
 
 # Scheduler
@@ -999,7 +1034,9 @@ cc.audioEngine.setEffectsVolume(cc.audioEngine.getEffectsVolume() + 0.1);
 
 # Loader
 
-直接加载资源，results存储了资源对应的cocos对象。
+## 直接加载资源
+
+results存储了资源对应的cocos对象。
 
 ```js
 var res = ["a.png", "b.png"];
@@ -1017,7 +1054,9 @@ cc.loader.getRes(name);
 cc.loader.release(name);
 ```
 
-加载图集到cc.spriteFramesCache
+## 加载图集
+
+加载到cc.spriteFramesCache
 
 ```js
 cc.loader.loadAliases("name.plist", function(){
@@ -1028,7 +1067,7 @@ cc.loader.loadAliases("name.plist", function(){
 });
 ```
 
-注册自定义的文件加载规则
+## 加载自定义文件
 
 ```js
 cc.loader.register(["mpx"], {
