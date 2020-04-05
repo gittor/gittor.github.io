@@ -637,6 +637,9 @@ if( 'mouse' in cc.sys.capabilities ) {
             //cc.EventMouse.BUTTON_RIGHT
             //cc.EventMouse.BUTTON_MIDDLE
             event.getButton();
+            
+            event.getDeltaX();
+            event.getDeltaY();
         },
         onMouseMove: function(event){
         },
@@ -830,6 +833,25 @@ var label = new cc.LabelTTF("title", fontDef);
 label.enableShadow(shadowColor, offset, blurSize);
 ```
 
+# cc.TextField
+
+```js
+var textField = new cc.TextFieldTTF(placeholder, fontName, fontSize);
+
+textField.setDelegate(this);
+
+textField.setString("text");
+textField.getString("text");
+```
+
+```js
+
+```
+
+
+
+
+
 # Node
 
 ## cc.Node
@@ -869,6 +891,19 @@ draw.drawDot(pos, radius, color);
 draw.drawRect(origin, destination, fillColor, lineWidth, lineColor);
 draw.drawSegment(from, to, lineWidth, color);
 draw.drawCircle(center, radius, angle, segments, drawLineToCenter, lineWidth, color);
+```
+
+## cc.ParallaxNode
+
+景深效果
+
+```js
+var voidNode = new cc.ParallaxNode();
+
+//ratio: cc.p 当voidNode移动(x,y)时，node只移动(ratio.x*x, ratio.y*y)
+//offset: cc.p(0,0)
+voidNode.addChild(node, zOrder, ratio, offset);
+
 ```
 
 
