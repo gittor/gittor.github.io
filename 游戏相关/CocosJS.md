@@ -1270,3 +1270,25 @@ var localpos = node.convertToNodeSpaceAR(worldpos);
 ```
 
 # 内置缓存
+
+## cc.textureCache
+
+```js
+cc.textureCache.addImageAsync(url, function(texture){
+}, this);
+```
+
+## cc.spriteFrame
+
+```js
+cc.spriteFrame.addSpriteFrame(SpriteFrame, name);
+
+cc.spriteFrame.addSpriteFrame(plist);
+```
+
+
+
+# 图像格式
+
+* Texture: 存在GPU中的纹理
+* SpriteFrame: Texture中的一部分 = Texture+Rect
