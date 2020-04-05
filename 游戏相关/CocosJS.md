@@ -364,6 +364,126 @@ var toggler = new cc.MenuItemToggle(menuItem1, menuItem2, ..., function (){
 }, this);
 ```
 
+# ccui.Widget
+
+## 通用接口
+
+所有继承了ccui.Widget的类，都可以使用以下接口
+
+```js
+//进入disable状态，图像会变灰
+widget.setEnabled(false);
+//不进入disable状态，但图像仍变灰
+widget.setBright(false);
+
+//使用九宫格图
+//capInsets: cc.rect 四个数字分别代表左侧宽，上边高，右侧宽，下边高
+widget.setScale9Enabled(true);
+widget.setCapInsets(capInsets);
+
+```
+
+## ccui.Button
+
+```js
+var button = new ccui.Button("normal.png", "pressed.png", "disabled.png");
+button.loadTextures("normal.png", "pressed.png", "disabled.png");
+
+//事件监听1
+button.addTouchEventListener(function (sender, type){
+    switch (type) {
+        case ccui.Widget.TOUCH_BEGAN:
+            break;
+        case ccui.Widget.TOUCH_MOVED:
+            break;
+        case ccui.Widget.TOUCH_ENDED:
+            break;
+        case ccui.Widget.TOUCH_CANCELED:
+            break;
+        default:
+            break;
+    }
+}, this);
+//事件监听2
+button.addClickEventListener(function (sender) {
+    
+});
+
+//点击时伴随缩放效果
+button.setPressedActionEnabled(true);
+//负数是向小缩
+button.setZoomScale(-0.05);
+
+//设置文字
+button.setTitleText("Title Button");
+
+//默认为true，表示按钮忽略本身的大小，而使用纹理的大小来调整title位置
+button.ignoreContentAdaptWithSize(false);
+
+//返回代表title的cc.LabelTTF
+var title = button.getTitleRenderer();
+
+```
+
+## ccui.CheckBox
+
+```js
+var checkBox = new ccui.CheckBox("normal.png", "checked.png");
+
+checkBox.addEventListener(function(sender, type){
+    switch (type) {
+        case ccui.CheckBox.EVENT_UNSELECTED:
+            break;
+        case ccui.CheckBox.EVENT_SELECTED:
+            break;
+    }
+}, this);
+
+checkBox.setSelected(true);
+```
+
+## ccui.UISlider
+
+```js
+var slider = new ccui.Slider();
+slider.loadBarTexture("back.png");
+slider.loadSlidBallTextures("ballNormal.png", "ballPressed.png", "ballDisable.png");
+slider.loadProgressBarTexture("covered.png");
+
+slider.addEventListener(function (sender, type){
+    switch (type) {
+        case ccui.Slider.EVENT_PERCENT_CHANGED:
+            var percent = sender.getPercent();
+            break;
+    }
+}, this);
+
+```
+
+
+
+## box布局
+
+```js
+var layout = new ccui.HBox();
+var layout = new ccui.VBox();
+
+layout.setFocused(true); //当用户点击键盘方向键时，会发送cc.EventListener.FOCUS
+layout.setLoopFocus(true);
+
+//node必须调用node.setFocusEnabled(true);
+layout.addChild(node);
+
+//注册事件监听
+cc.eventManager.addListener({
+    event: cc.EventListener.FOCUS,
+    onFocusChanged: function(widgetLostFocus, widgetGetFocus){
+        widgetLostFocus.isFocusEnabled();
+        widgetGetFocus.isFocusEnabled();
+    }
+}, this);
+```
+
 
 
 # Event
@@ -474,6 +594,20 @@ if ('keyboard' in cc.sys.capabilities) {
     }, this);
 }
 ```
+
+## 图片浏览事件
+
+```js
+cc.eventManager.addListener({
+    event: cc.EventListener.FOCUS,
+    onFocusChanged: function(widgetLostFocus, widgetGetFocus){
+        widgetLostFocus.isFocusEnabled();
+        widgetGetFocus.isFocusEnabled();
+    }
+}, this);
+```
+
+
 
 ## 自定义事件
 
@@ -623,24 +757,10 @@ label.setVerticalAlignment(valign);
 字体阴影
 
 ```js
-// font definition
-var fontDef = new cc.FontDefinition();
-fontDef.fontName = "Arial";
-fontDef.fontSize = 32;
-fontDef.textAlign = cc.TEXT_ALIGNMENT_LEFT;
-fontDef.verticalAlign = cc.VERTICAL_TEXT_ALIGNMENT_TOP;
-fontDef.fillStyle = cc.color(255,255,233);
-fontDef.boundingWidth = 300;
-fontDef.boundingHeight = 200;
-// shadow
-fontDef.shadowEnabled = true;
-fontDef.shadowOffsetX = 6;
-fontDef.shadowOffsetY = -3;
-// stroke，只在移动设备上支持
-fontDef.strokeEnabled = true;
-fontDef.strokeStyle = cc.color(0,0,0);
-
 var label = new cc.LabelTTF("title", fontDef);
+//offset: cc.p
+//blurSize: [0,1]
+label.enableShadow(shadowColor, offset, blurSize);
 ```
 
 # Node
