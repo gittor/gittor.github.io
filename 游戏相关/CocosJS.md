@@ -844,14 +844,6 @@ textField.setString("text");
 textField.getString("text");
 ```
 
-```js
-
-```
-
-
-
-
-
 # Node
 
 ## cc.Node
@@ -1141,6 +1133,20 @@ cc.loader.load(["data.mpx"], function(error, results){
 });
 ```
 
+# cc.sys.localStorage
+
+```js
+cc.sys.localStorage.setItem(key, value);
+
+var value = cc.sys.localStorage.getItem(key);
+
+cc.sys.localStorage.removeItem(key);
+
+cc.sys.localStorage.clear();
+```
+
+
+
 # Component
 
 创建组件
@@ -1229,6 +1235,24 @@ switch(cc.sys.language)
 }
 ```
 
+## cc.sys.capabilities
+
+cc.sys.capabilities是一个字符串列表
+
+* canvas: 是否web环境
+* opengl: 是否使用opengl环境
+* keyboard: 是否支持键盘
+* touch: 是否支持触摸
+* mouse: 是否支持鼠标
+
+## cc.sys.openURL
+
+在系统浏览器中打开网址
+
+```js
+cc.sys.openURL("http://www.cocos2d-x.org/");
+```
+
 
 
 # 坐标转换
@@ -1245,3 +1269,4 @@ var localpos = node.convertToNodeSpace(worldpos);
 var localpos = node.convertToNodeSpaceAR(worldpos);
 ```
 
+# 内置缓存
