@@ -999,13 +999,9 @@ node.unscheduleAllCallbacks();
 
 ```
 
-# Audio
+# AudioEngine
 
-cocos中共集成了几种音效接口
-
-## AudioEngine
-
-### 播放背景音乐
+## 播放背景音乐
 
 ```js
 //播放/停止
@@ -1026,7 +1022,7 @@ cc.audioEngine.isMusicPlaying();
 cc.audioEngine.setMusicVolume(cc.audioEngine.getMusicVolume() + 0.1);
 ```
 
-### 播放音效
+## 播放音效
 
 ```js
 //播放/停止
@@ -1127,6 +1123,59 @@ var Player = cc.ComponentJS.extend({
 ```js
 var playerComponent = new cc.ComponentJS("src/ComponentTest/player.js");
 node.addComponent(playerComponent);
+```
+
+# jsb.fileUtils
+
+```js
+jsb.fileUtils.addSearchPath(path);
+jsb.fileUtils.setSearchPath(paths);
+
+jsb.fileUtils.getWritablePath();
+```
+
+# 骨骼动画
+
+```js
+var spineBoy = new sp.SkeletonAnimation('spineboy.json', 'spineboy.atlas');
+
+spineBoy.setMix(from_name, to_name, duration_seconds);
+spineBoy.setMix('jump', 'run', duration_seconds);
+
+//在trackIndex轨上播放animation_name动画
+spineBoy.setAnimation(trackIndex, animation_name, loop);
+
+var trackEntry = spineBoy.getCurrent();
+
+//改变动画播放速度
+spineBoy.setTimeScale(1.0);
+
+//设置蒙皮，可以不设置，直接使用默认蒙皮
+spineBoy.setSkin("goblin");
+
+spineBoy.setStartListener(function(trackEntry){
+});
+spineBoy.setEndListener(function(trackEntry){
+});
+spineBoy.setCompleteListener(function(trackEntry){
+});
+spineBoy.setEventListener(function(trackEntry, event){
+});
+```
+
+## TrackEntry的接口
+
+```js
+trackEntry.animation;
+trackEntry.animation.name;
+
+trackEntry.trackIndex;
+
+//这一轨已经播放了多长时间
+trackEntry.trackTime;
+
+//这一轨的动画时长
+trackEntry.animationEnd;
 ```
 
 
