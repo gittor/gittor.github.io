@@ -381,6 +381,7 @@ widget.setBright(false);
 widget.setScale9Enabled(true);
 widget.setCapInsets(capInsets);
 
+
 ```
 
 ## ccui.Button
@@ -442,7 +443,7 @@ checkBox.addEventListener(function(sender, type){
 checkBox.setSelected(true);
 ```
 
-## ccui.UISlider
+## ccui.Slider
 
 ```js
 var slider = new ccui.Slider();
@@ -458,6 +459,45 @@ slider.addEventListener(function (sender, type){
     }
 }, this);
 
+```
+
+## ccui.ImageView
+
+```js
+var imageView = new ccui.ImageView("image.png");
+imageView.loadTexture("image.png");
+```
+
+## ccui.LoadingBar
+
+```js
+var loadingBar = new ccui.LoadingBar();
+loadingBar.loadTexture("ccs-res/cocosui/sliderProgress.png");
+//percent: [0,100]
+loadingBar.setPercent(percent);
+
+//ccui.LoadingBar.TYPE_LEFT: 从左到右 默认
+//ccui.LoadingBar.TYPE_RIGHT: 从右到左
+loadingBar.setDirection(ccui.LoadingBar.TYPE_RIGHT);
+```
+
+## ccui.ScrollView
+
+```js
+var scrollView = new ccui.ScrollView();
+//ccui.ScrollView.DIR_HORIZONTAL
+//ccui.ScrollView.DIR_VERTICAL
+//ccui.ScrollView.DIR_BOTH
+//ccui.ScrollView.DIR_NONE
+scrollView.setDirection(ccui.ScrollView.DIR_VERTICAL);
+scrollView.setTouchEnabled(true);
+scrollView.setContentSize(cc.size());
+
+//设置所有子节点的大小
+scrollView.setInnerContainerSize(cc.size());
+
+//添加子节点
+scrollView.addChild(node);
 ```
 
 
