@@ -915,7 +915,24 @@ particleSystem.setAutoRemoveOnFinish(true);
 this.addChild(particleSystem);
 ```
 
+# RenderTexture
 
+RenderTexture在每帧开始不会自动clear，所以画在上面的内容会一直保留。
+
+```js
+var renderTexture = new cc.RenderTexture(winSize.width, winSize.height);
+this.addChild(renderTexture); //也可以没有这一步
+
+renderTexture.begin();
+sprite.visit(); //sprite只渲染到target上
+renderTexture.end();
+
+//
+renderTexture.clear(r, g, b, a);
+
+//format: cc.IMAGE_FORMAT_PNG cc.IMAGE_FORMAT_JPEG
+renderTexture.saveToFile(filename, format);
+```
 
 # Scheduler
 
@@ -1091,6 +1108,25 @@ cc.loader.load(["data.mpx"], function(error, results){
         return;
     }
 });
+```
+
+# Component
+
+创建组件
+
+```js
+var Player = cc.ComponentJS.extend({
+    onEnter: function() {
+        var owner = this.getOwner();
+    }
+});
+```
+
+使用组件
+
+```js
+var playerComponent = new cc.ComponentJS("src/ComponentTest/player.js");
+node.addComponent(playerComponent);
 ```
 
 
