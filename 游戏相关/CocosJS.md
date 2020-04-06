@@ -54,11 +54,11 @@
 
 ## ccs
 
-CocosStudio除UI外的功能
+CocosStudio功能支持
 
 ## ccui
 
-CocosStudio UI相关功能
+cocos的亲儿子UI部分
 
 | 名称            | 角色 | 作用                   |
 | --------------- | ---- | ---------------------- |
@@ -96,7 +96,7 @@ cc.game.run();
 
 
 
-# 分辨率设置
+# 适配设置
 
 ```javascript
 cc.view.enableRetina(false);
@@ -108,12 +108,28 @@ cc.view.enableRetina(false);
 //cc.ORIENTATION_PORTRAIT_UPSIDE_DOWN
 cc.view.setOrientation(cc.ORIENTATION_LANDSCAPE);
 
+//设置了设计分辨率之后，相当于通知了cocos，该以什么比例缩放整个scene。
 //EXACT_FIT FIXED_HEIGHT FIXED_WIDTH NO_BORDER SHOW_ALL UNKNOWN
 cc.view.setDesignResolutionSize(800, 450, cc.ResolutionPolicy.SHOW_ALL);
 
 //当浏览器大小改变的时候，canvas的大小自动随之改变
 cc.view.resizeWithBrowserSize(true);
 ```
+
+下面这些接口，取得的数据都是逻辑单位
+
+```js
+//取得窗口大小
+cc.director.getWinSize();
+
+//一般情况下，visibleSize和winSize是一样的，只有对当前scene做了变换操作才会导致不一样。
+//当前scene的可视范围
+cc.director.getVisibleSize();
+//当前scene的可视原点
+cc.director.getVisibleOrigin();
+```
+
+
 
 # Director
 
@@ -1269,6 +1285,12 @@ var localpos = node.convertToNodeSpace(worldpos);
 var localpos = node.convertToNodeSpaceAR(worldpos);
 ```
 
+# 图像格式
+
+* Image: 存在硬盘上的图片
+* Texture: 加载Image后，存在GPU中的纹理
+* SpriteFrame: Texture中的一部分 = Texture+Rect
+
 # 内置缓存
 
 ## cc.textureCache
@@ -1286,9 +1308,56 @@ cc.spriteFrame.addSpriteFrame(SpriteFrame, name);
 cc.spriteFrame.addSpriteFrame(plist);
 ```
 
+# 网络
 
+## XMLHttpRequest
 
-# 图像格式
+完整API参考: https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest
 
-* Texture: 存在GPU中的纹理
-* SpriteFrame: Texture中的一部分 = Texture+Rect
+```js
+var xhr = cc.loader.getXMLHttpRequest();
+
+xhr.timeout = 5000;
+
+//set arguments with <URL>?xxx=xxx&yyy=yyy
+xhr.open("GET", "http://httpbin.org/gzip", async_bool);
+xhr.setRequestHeader("Accept-Encoding","gzip,deflate");
+
+xhr.onloadstart = function(){
+}
+xhr.onabort = function(){
+}
+xhr.onerror = function(){
+}
+xhr.onload = function(){
+}
+xhr.onloadend = function(){
+}
+xhr.ontimeout = function(){
+}
+xhr.onreadystatechange = function(){
+    //4==下载操作已经完成
+    if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) {
+        xhr.responseText;
+    }
+}
+
+xhr.send();
+xhr.send(new Uint8Array([1,2,3,4,5])); //用于post方式
+```
+
+## SocketIO
+
+```js
+var sioclient = SocketIO.connect("ws://tools.itharbors.com:4000");
+
+sioclient.on("connect", function() {
+});
+sioclient.on("message", function(data) {
+});
+sioclient.on("disconnect", function() {
+});
+
+sioclient.send("Hello Socket.IO!");
+```
+
