@@ -12,11 +12,6 @@
 
 * frameworks：cocos本身的所有文件
 * simulator：编译后生成的可执行文件
-  * win32：windows的exe文件所在的目录
-    * Resources：执行时需要的所有cocos运行时、代码、资源所在的目录
-      * res：本项目的所有资源
-      * src：本项目的所有源码
-      * script：jsb的所有代码
 * **res：所有资源所在的文件夹**
 * **src：所有源码所在目录**
 * .cocos-project.json：关于cocos的配置文件，没什么用
@@ -42,6 +37,8 @@
 | sys         | 获取运行环境                 |
 | plistParser | 解析plist文件                |
 | loader      | 负责Resources目录操作        |
+
+类型
 
 | 名称                  | 作用                           |
 | --------------------- | ------------------------------ |
@@ -129,16 +126,6 @@ cc.director.getVisibleSize();
 cc.director.getVisibleOrigin();
 ```
 
-
-
-# Director
-
-| 成员       | 作用         |
-| ---------- | ------------ |
-| getWinSize | 取得窗口大小 |
-|            |              |
-|            |              |
-
 # Action
 
 ## Node属性动画类
@@ -172,7 +159,7 @@ var progress = new cc.ProgressTimer(new cc.Sprite("*.png"));
 //cc.ProgressTimer.TYPE_BAR 进度条动画
 progress.type = cc.ProgressTimer.TYPE_BAR;
 
-//
+//false: 从左向右、顺时针
 progress.reverseDir = true;
 
 //动画的起始点
@@ -293,6 +280,8 @@ node.setActionManager(actionMan);
 
 # MotionStreak
 
+拖尾效果
+
 ```js
 //fade_seconds=一个treak item经过多长时间消失
 //minimum_segment_size=target移动多少，产生一个treak item
@@ -301,18 +290,8 @@ node.setActionManager(actionMan);
 //texture_or_texturename=拖尾使用的图
 var streak = new cc.MotionStreak(fade_seconds, minimum_segment_size, texture_size, color, texture_or_texturename);
 
-//需要注意的是，MotionStreak是在世界空间中工作的，所以设置位置时要使用世界空间
-cc.eventManager.addListener({
-    event: cc.EventListener.TOUCH_ALL_AT_ONCE,
-    onTouchesMoved:function (touches, event) {
-        if (touches.length == 0)
-            return;
-
-        var touchLocation = touches[0].getLocation();
-        streak.setPosition(touchLocation);
-    }
-}, this);
-
+//当streak的位置改变时，会生成拖尾效果
+streak.setPosition(worldLocation);
 ```
 
 
@@ -554,7 +533,7 @@ var layout = new ccui.VBox();
 layout.setFocused(true); //当用户点击键盘方向键时，会发送cc.EventListener.FOCUS
 layout.setLoopFocus(true);
 
-//node必须调用node.setFocusEnabled(true);
+//如果要让layout的setFocused起作用，node必须调用node.setFocusEnabled(true);
 layout.addChild(node);
 
 //注册事件监听
@@ -709,7 +688,7 @@ this._listener1 = cc.EventListener.create({
         event.getUserData();
     }
 });
-cc.eventManager.addListener(this._listener1, 1);
+cc.eventManager.addListener(this._listener1, nodeOrPriority);
 
 //3.发射事件
 var event = new cc.EventCustom(MyEventName);
@@ -724,10 +703,10 @@ cc.eventManager.removeListener(this._listener1);
 
 ```js
 //添加事件监听
-//EVENT_AFTER_UPDATE
-//EVENT_AFTER_VISIT
-//EVENT_AFTER_DRAW
-//EVENT_PROJECTION_CHANGED
+//EVENT_AFTER_UPDATE update后发送
+//EVENT_AFTER_VISIT visit后发送
+//EVENT_AFTER_DRAW draw后发送
+//EVENT_PROJECTION_CHANGED 投影矩阵改变后发送
 this._event1 = cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_UPDATE, function(event){
     
 });
@@ -1272,10 +1251,6 @@ cc.sys.openURL("http://www.cocos2d-x.org/");
 
 
 # 坐标转换
-
-* 世界坐标
-* 屏幕坐标
-* 局部坐标
 
 ```js
 //返回的localpos为相对于(0,0)点的坐标
