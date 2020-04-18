@@ -1014,6 +1014,9 @@ this._newScheduler.scheduleUpdateForTarget(this._newActionManager, 0, false);
 //内部调用了cc.director.getScheduler().scheduleUpdateForTarget(this, 0, false);
 node.schedule(callback, tick_seconds=0, tick_count=4294967294);
 
+//key: [string] 唯一标识符，可以不填
+node.scheduleOnce(callback, delay, key);
+
 node.scheduleUpdate();
 node.scheduleUpdateWithPriority(priority);
 
