@@ -124,6 +124,8 @@ npm install -g electron-forge
 
 # 基本布局
 
+提供一个布局好的，有边栏、页头、主界面的index.html。
+
 ```html
 <!DOCTYPE html>
 <html>
