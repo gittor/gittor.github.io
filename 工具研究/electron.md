@@ -121,3 +121,64 @@ npm install -g electron-forge
 > 使用`npm start`启动项目。
 >
 > 在main.js中注释`mainWindow.webContents.openDevTools();`关闭开发者工具。
+
+# 基本布局
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8">
+ <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+ <script src="https://unpkg.com/vue/dist/vue.js"></script>
+ <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+<body>
+ <div id="app">
+   <el-container>
+    <el-aside>Aside</el-aside>
+    <el-container>
+      <el-header>Header</el-header>
+      <el-main>Main</el-main>
+      <el-footer>Footer</el-footer>
+    </el-container>
+  </el-container>
+ </div>
+</body>
+
+<script>
+  var data = {
+    visible: false
+  }
+  new Vue({
+   el: '#app',
+   data: data,
+  })
+</script>
+
+<style>
+  .el-header, .el-footer {
+    background-color: #B3C0D1;
+    text-align: center;
+  }
+
+  html,body,#app,.el-container {
+    height: 100%;
+  }
+  
+  .el-aside {
+    background-color: #D3DCE6;
+    text-align: center;
+  }
+  
+  .el-main {
+    background-color: #E9EEF3;
+    text-align: center;
+  }
+  
+</style>
+
+</html>
+```
+
