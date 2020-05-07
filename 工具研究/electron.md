@@ -39,13 +39,13 @@ ElementUI是基于vue开发的一套桌面风格的UI库。
 
 * html展示：通过编写html页面实现功能。
   * 每个html页面都运行在一个独立的渲染进程里。
-  * 操作vue相关的API。
+  * 工作内容为操作vue相关的API。
 * 其他部分：
-  * 桌面应用UI部分：包括标题栏、菜单栏，工具栏，文件拖放等。操作electron API。
+  * 桌面应用UI部分：包括标题栏、菜单栏，工具栏，文件拖放等。通过操作electron的API实现。
   * 与html页面进行数据交换等操作。通过electron中的ipc接口实现。
   * 运行在唯一的主进程里。
 
-## 安装electron-forge
+# 安装electron-forge
 
 electron项目的创建和打包都需要执行较多命令，使用electron-forge可以简化这个过程。
 
@@ -55,7 +55,7 @@ npm install -g electron-forge
 
 ---
 
-常用命令
+## 常用命令
 
 | 目的     | 命令                        | 说明                                 |
 | -------- | --------------------------- | ------------------------------------ |
@@ -73,9 +73,9 @@ npm install -g electron-forge
 > electron-forge init myapp
 > ```
 
-> 修改index.js为main.js
+> 修改index.js为main.js，作为应用程序的启动脚本。
 >
-> 修改project.json的入口文件为main.js
+> 修改project.json的入口文件为main.js。
 
 > 替换index.html
 >
@@ -117,3 +117,7 @@ npm install -g electron-forge
 > * myapp/
 >   * main.js：启动文件
 >   * index.html：启动页面
+>
+> 使用`npm start`启动项目。
+>
+> 在main.js中注释`mainWindow.webContents.openDevTools();`关闭开发者工具。
