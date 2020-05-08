@@ -70,7 +70,7 @@ npm install -g electron-forge
 > 新建项目
 >
 > ```bash
-> electron-forge init myapp
+> electron-forge init <myapp>
 > ```
 
 > 修改index.js为main.js，作为应用程序的启动脚本。
@@ -93,23 +93,64 @@ npm install -g electron-forge
 > 
 > <body>
 >  <div id="app">
->    <el-button @click="visible = true">Button</el-button>
->    <el-dialog :visible.sync="visible" title="Hello world">
->      <p>Try Element</p>
->    </el-dialog>
+>    <el-container>
+>     <el-aside>Aside</el-aside>
+>     <el-container>
+>       <el-header>Header</el-header>
+>       <el-main>
+>         <p>{{message}}</p>
+>         <p>{{reversedMessage()}}</p>
+>       </el-main>
+>       <el-footer>Footer</el-footer>
+>     </el-container>
+>   </el-container>
 >  </div>
 > </body>
 > 
 > <script>
->   var data = {
->     visible: false
->   }
 >   new Vue({
->    el: '#app',
->    data: data,
+>     el: '#app',
+>     
+>     data: {
+>       message: "Hello World"
+>     },
+> 
+>     created: function()
+>     {
+> 
+>     },
+> 
+>     methods: {
+>       reversedMessage: function(){
+>         return this.message.split('').reverse().join('');
+>       },
+>     },
 >   })
 > </script>
+> 
+> <style>
+>   html,body,#app,.el-container {
+>     height: 100%;
+>   }
+> 
+>   .el-header, .el-footer {
+>     background-color: #B3C0D1;
+>     text-align: center;
+>   }
+> 
+>   .el-aside {
+>     background-color: #D3DCE6;
+>     text-align: center;
+>   }
+> 
+>   .el-main {
+>     background-color: #E9EEF3;
+>     text-align: center;
+>   }
+> </style>
+> 
 > </html>
+> 
 > ```
 
 > 最终的项目结构
@@ -120,67 +161,5 @@ npm install -g electron-forge
 >
 > 使用`npm start`启动项目。
 >
-> 在main.js中注释`mainWindow.webContents.openDevTools();`关闭开发者工具。
-
-# 基本布局
-
-提供一个布局好的，有边栏、页头、主界面的index.html。
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
- <meta charset="UTF-8">
- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
- <script src="https://unpkg.com/vue/dist/vue.js"></script>
- <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-</head>
-
-<body>
- <div id="app">
-   <el-container>
-    <el-aside>Aside</el-aside>
-    <el-container>
-      <el-header>Header</el-header>
-      <el-main>Main</el-main>
-      <el-footer>Footer</el-footer>
-    </el-container>
-  </el-container>
- </div>
-</body>
-
-<script>
-  var data = {
-    visible: false
-  }
-  new Vue({
-   el: '#app',
-   data: data,
-  })
-</script>
-
-<style>
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    text-align: center;
-  }
-
-  html,body,#app,.el-container {
-    height: 100%;
-  }
-  
-  .el-aside {
-    background-color: #D3DCE6;
-    text-align: center;
-  }
-  
-  .el-main {
-    background-color: #E9EEF3;
-    text-align: center;
-  }
-  
-</style>
-
-</html>
-```
+> 在main.js中，通过注释`mainWindow.webContents.openDevTools();`关闭开发者工具。
 
