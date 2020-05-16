@@ -4,13 +4,12 @@
 
 ## 工具链说明
 
-| 工具           | 文档                             | 版本    | 安装方式         |
-| -------------- | -------------------------------- | ------- | ---------------- |
-| Node           | https://nodejs.org/zh-cn/docs/   | 12.16.1 | 下载二进制包安装 |
-| electron       | https://www.electronjs.org/docs  | 8.11    | 不需要手动操作   |
-| electron-forge | https://www.electronforge.io/    | 5.2.4   | 见下             |
-| vue            | https://cn.vuejs.org/v2/guide/   | 2.6     | cdn引入          |
-| ElementUI      | https://element.eleme.cn/#/zh-CN |         | cdn引入          |
+| 工具      | 文档                             | 版本    | 安装方式         |
+| --------- | -------------------------------- | ------- | ---------------- |
+| Node      | https://nodejs.org/zh-cn/docs/   | 12.16.1 | 下载二进制包安装 |
+| electron  | https://www.electronjs.org/docs  | 8.11    | 不需要手动操作   |
+| vue       | https://cn.vuejs.org/v2/guide/   | 2.6     | cdn引入          |
+| ElementUI | https://element.eleme.cn/#/zh-CN |         | cdn引入          |
 
 ## 为什么使用electron
 * 优点：跨平台，技术有前景，轻量。
@@ -45,121 +44,9 @@ ElementUI是基于vue开发的一套桌面风格的UI库。
   * 与html页面进行数据交换等操作。通过electron中的ipc接口实现。
   * 运行在唯一的主进程里。
 
-# 安装electron-forge
-
-electron项目的创建和打包都需要执行较多命令，使用electron-forge可以简化这个过程。
-
-```bash
-npm install -g electron-forge
-```
-
----
-
-## 常用命令
-
-| 目的     | 命令                        | 说明                                 |
-| -------- | --------------------------- | ------------------------------------ |
-| 新建项目 | `electron-forge init myapp` | 新建项目时会安装较多依赖，时间较长。 |
-| 运行项目 | `npm start`                 |                                      |
-| 打包分发 | `electron-forge make`       | 生成结果在out目录下。                |
-
-需要注意的是，可以使用`electron-forge init --template=vue`新建项目，但是生成出来的项目多了一些不需要的内容并且会导致运行错误，所以接下来会使用默认的方式。
-
 # 新建项目
 
-> 新建项目
->
-> ```bash
-> electron-forge init <myapp>
-> ```
-
-> 修改index.js为main.js，作为应用程序的启动脚本。
->
-> 修改project.json的入口文件为main.js。
-
-> 替换index.html
->
-> 默认的模板是空页面，下面的模板引入了vue和Element。
->
-> ```html
-> <!DOCTYPE html>
-> <html>
-> <head>
->  <meta charset="UTF-8">
->  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
->  <script src="https://unpkg.com/vue/dist/vue.js"></script>
->  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-> </head>
-> 
-> <body>
->  <div id="app">
->    <el-container>
->     <el-aside>Aside</el-aside>
->     <el-container>
->       <el-header>Header</el-header>
->       <el-main>
->         <p>{{message}}</p>
->         <p>{{reversedMessage()}}</p>
->       </el-main>
->       <el-footer>Footer</el-footer>
->     </el-container>
->   </el-container>
->  </div>
-> </body>
-> 
-> <script>
->   new Vue({
->     el: '#app',
->     
->     data: {
->       message: "Hello World"
->     },
-> 
->     created: function()
->     {
-> 
->     },
-> 
->     methods: {
->       reversedMessage: function(){
->         return this.message.split('').reverse().join('');
->       },
->     },
->   })
-> </script>
-> 
-> <style>
->   html,body,#app,.el-container {
->     height: 100%;
->   }
-> 
->   .el-header, .el-footer {
->     background-color: #B3C0D1;
->     text-align: center;
->   }
-> 
->   .el-aside {
->     background-color: #D3DCE6;
->     text-align: center;
->   }
-> 
->   .el-main {
->     background-color: #E9EEF3;
->     text-align: center;
->   }
-> </style>
-> 
-> </html>
-> 
-> ```
-
-> 最终的项目结构
->
-> * myapp/
->   * main.js：启动文件
->   * index.html：启动页面
->
-> 使用`npm start`启动项目。
->
-> 在main.js中，通过注释`mainWindow.webContents.openDevTools();`关闭开发者工具。
-
+1. 下载模板文件：<a href="/工具研究/electron/myapp.zip" download="myapp.zip">myapp</a>
+2. 修改文件夹名字`myapp`、`package.json`中的`name`字段为新项目的名字
+3. 执行`npm install`或`cnpm install`下载依赖文件
+4. 执行`npm start`运行项目
