@@ -65,13 +65,13 @@
 
 > 提供vue指令，来控制网页元素的attribute
 > 
-> | 举例                                     | 作用                                        |
-> | ---------------------------------------- | ------------------------------------------- |
-> | `<p v-if="seen">现在你看到我了</p>`      | p是否显示，决定于seen的真假                 |
-> | `<p v-for="todo in todos">{{todo}}</p>`  | 利用循环显示todos列表的每一项               |
-> | `<button v-on:click="reverse"></button>` | 点击按钮时，触发在vue中注册的reverse方法    |
-> | `<input v-model="message">`              | 用户输入的数据等价于message变量，双向绑定   |
-> | `<span v-bind:title="message"></span>`   | 现在span.title会与message保持一致，单向绑定 |
+> | 举例                                     | 作用                                     |
+> | ---------------------------------------- | ---------------------------------------- |
+> | `<p v-if="seen">现在你看到我了</p>`      | p是否显示，决定于seen的真假              |
+> | `<p v-for="todo in todos">{{todo}}</p>`  | 利用循环显示todos列表的每一项            |
+> | `<button v-on:click="reverse"></button>` | 点击按钮时，触发在vue中注册的reverse方法 |
+> | `<input v-model="message">`              | 用户输入的数据等价于message变量          |
+> | `<span v-bind:title="message"></span>`   | 现在span.title会与message保持一致        |
 > 
 
 
@@ -265,7 +265,7 @@ v-for中的`in`，语义上和js中的`of`相同
 
 # v-model
 
-v-model用于在支持用户输入的元素，与程序变量之间，做双向绑定。
+v-model用于在支持用户输入的元素，与程序变量之间，做绑定。
 
 | 元素类型   | html                                                | 变量类型 |
 | ---------- | --------------------------------------------------- | -------- |
