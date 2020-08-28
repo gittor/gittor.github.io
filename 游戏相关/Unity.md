@@ -64,7 +64,7 @@ touch.position;
 touch.deltaTime;
 touch.deltaPosition;
 
-//可以用来检测双击
+//可以用来检测双击，双击时值为2
 int touch.tapCount;
 
 //触摸信息的唯一标识
@@ -82,18 +82,18 @@ int touch.fingerId;
 
 轴接口一共分两种：
 
-用于处理移动类输入的接口
+用于处理平滑移动类输入的接口
 
 ```c#
 //返回值在[-1,1]之间
 float Input.GetAxis(string axisName);
 ```
 
-用于处理事件类输入的接口，例如开火等。
+用于处理即时事件类输入的接口，例如开火按钮等。
 
 ```c#
 bool Input.GetButton(string buttonName); //当buttonName按下时每次调用都返回true
-bool Input.GetButtonDown(string buttonName);
-bool Input.GetButtonUp(string buttonName);
+bool Input.GetButtonDown(string buttonName); //按下时触发一次
+bool Input.GetButtonUp(string buttonName); //松开时触发一次
 ```
 
