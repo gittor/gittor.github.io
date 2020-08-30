@@ -4,6 +4,24 @@
 
 以Unity 2019.03版本为研究对象。
 
+# 2D项目
+
+1. 设置Game面板的预览窗口大小(1136x768)。
+2. 相机投影模式(Projection)：Orthographic。
+3. 相机Size(1136/2=568)。
+4. 在Scene里添加Canvas，设置渲染模式为World Space，修改Canvas大小(1136x768)。
+
+
+
+1. 原点在左下角
+
+# vs项目
+
+* 生成sln：Edit->Preference->External Tool->Regenerate project files。
+* 调试：
+  * 下载vs2017 for unity：工具->获取工具和功能->安装unity支持包。
+  * 调试->附加unity调试程序。
+
 # 用户输入
 
 Unity中有两套输入系统：
@@ -26,7 +44,8 @@ bool Input.GetMouseButtonDown(buttonIndex);
 bool Input.GetMouseButtonUp(buttonIndex);
 
 //取得鼠标的当前位置
-//原点为游戏窗口的左下角，最大值为游戏窗口的右上角(Screen.width,Screen.height)
+//屏幕坐标，原点为游戏窗口的左下角，最大值为游戏窗口的右上角(Screen.width,Screen.height)
+//使用时需要转换成世界坐标
 Vector3 Input.mousePosition;
 
 //设置鼠标显示模式
@@ -57,7 +76,7 @@ bool Input.multiTouchEnabled;
 touch.phase;
 
 //Vector2
-//屏幕左下角为原点，最小单位为像素
+//屏幕坐标，左下角为原点，最小单位为像素
 touch.position;
 
 //自上次更新到本次更新的差值
@@ -97,3 +116,34 @@ bool Input.GetButtonDown(string buttonName); //按下时触发一次
 bool Input.GetButtonUp(string buttonName); //松开时触发一次
 ```
 
+# GameObject操作
+
+```c#
+obj.localPosition; //局部坐标
+obj.position; //全局坐标
+```
+
+# 坐标转换
+
+世界坐标vs局部坐标
+
+```c#
+obj.transform.TransformPoint(localPoint); //局部坐标转成世界坐标
+obj.transform.InverseTransformPoint(worldPoint); //世界坐标转成局部坐标
+```
+
+屏幕坐标vs世界坐标
+
+```c#
+Camera.main.ScreenToWorldPoint(Input.mousePosition); //屏幕坐标转成世界坐标
+Camera.main.WorldToScreenPoint(worldPosition); //世界坐标转成屏幕坐标
+```
+
+# 屏幕适配
+
+# 动画
+
+## 添加动画
+
+1. 选中要添加动画的物体，按ctrl+6。
+2. 添加动画并保存，会生成.anim和.controller两个文件。
