@@ -1,3 +1,6 @@
+
+[三角函数计算器](.\实践项目\TrigoCalc ':include :type=iframe width=100% height=380px')
+
 # 动态拼图游戏
 
 <img src=".\实践项目\jigsaw3.png" alt="jigsaw3" style="zoom:50%;" />

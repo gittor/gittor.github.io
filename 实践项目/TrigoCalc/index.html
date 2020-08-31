@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<h1>三角函数计算器</h1>
+
+		<div >			
+			<el-input v-model.number="degree" v-on:input="onDegreeChanged" type="number">
+				<template slot="prepend">角度:</template>
+			</el-input>
+		</div>
+
+		<div>			
+			<el-input v-model.number="radian" v-on:input="onRadianChanged" type="number">
+				<template slot="prepend">弧度:</template>
+			</el-input>
+		</div>
+
+		<div>			
+			<el-input v-model.number="sin" v-on:input="onSinChanged" type="number">
+				<template slot="prepend">正弦:</template>
+			</el-input>
+		</div>
+
+		<div>			
+			<el-input v-model.number="cos" v-on:input="onCosChanged" type="number">
+				<template slot="prepend">余弦:</template>
+			</el-input>
+		</div>
+
+		<div>			
+			<el-input v-model.number="tan" v-on:input="onTanChanged" type="number">
+				<template slot="prepend">正切:</template>
+			</el-input>
+		</div>
+
+		<div>			
+			<el-input v-model.number="cot" v-on:input="onCotChanged" type="number">
+				<template slot="prepend">余切:</template>
+			</el-input>
+		</div>
+
+	</div>
+</body>
+
+<script>
+	new Vue({
+		el: '#app',
+
+		data: {
+			degree: "",
+			radian: "",
+			sin: "",
+			cos: "",
+			tan: "",
+			cot: "",
+		},
+
+		created: function()
+		{
+
+		},
+
+		computed: {
+			messageLength: function()
+			{
+				return this.message.length;
+			},
+		},
+
+		methods: {
+			updateDegree: function(degree, sender)
+			{
+				if (sender !== "degree")
+					this.degree = degree
+				if (sender !== "radian")
+					this.radian = (degree*Math.PI/180)
+				if (sender !== "sin")
+					this.sin = Math.sin(this.radian)
+				if (sender !== "cos")
+					this.cos = Math.cos(this.radian)
+				if (sender !== "tan")
+					this.tan = Math.tan(this.radian)
+				if (sender !== "cot")
+					this.cot = 1/this.tan
+
+				if (sender !== "degree")
+					this.degree = this.degree.toFixed(0)
+				if (sender !== "radian")
+					this.radian = this.radian.toFixed(2)
+				if (sender !== "sin")
+					this.sin = this.sin.toFixed(2)
+				if (sender !== "cos")
+					this.cos = this.cos.toFixed(2)
+				if (sender !== "tan")
+					this.tan = this.tan.toFixed(2)
+				if (sender !== "cot")
+					this.cot = this.cot.toFixed(2)
+			},
+			onDegreeChanged: function()
+			{
+				if (this.degree)
+				{
+					this.updateDegree(this.degree, "degree")
+				}
+				else
+				{
+					this.updateDegree(0, "degree")
+				}
+			},
+			onRadianChanged: function()
+			{
+				this.updateDegree(this.radian*180/Math.PI, "radian")
+			},
+			onSinChanged: function()
+			{
+				this.updateDegree(Math.asin(this.sin), "sin")
+			},
+			onCosChanged: function()
+			{
+				this.updateDegree(Math.acos(this.cos), "cos")
+			},
+			onTanChanged: function()
+			{
+				this.updateDegree(Math.atan(this.tan), "tan")
+			},
+			onCotChanged: function()
+			{
+				this.updateDegree(Math.atan(1/this.cot), "cot")
+			},
+		},
+	})
+</script>
+
+<style>
+	html,body,#app,.el-container {
+		height: 100%;
+	}
+
+	.el-header, .el-footer {
+		background-color: #B3C0D1;
+		text-align: center;
+	}
+
+	.el-aside {
+		background-color: #D3DCE6;
+		text-align: center;
+	}
+
+	.el-main {
+		background-color: #E9EEF3;
+		text-align: center;
+	}
+
+	div {
+		width: 400px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+</style>
+
+</html>

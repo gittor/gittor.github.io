@@ -1,3 +1,4 @@
+#! /usr/bin/python
 #encoding=utf8
 
 # 执行这个文件，会在脚本所在路径，重新生成_sidebar.md
@@ -136,7 +137,8 @@ def getTotalMD():
 def main():
     # 先把当前路径调整为脚本所在路径，以便于可以双击直接运行
     scriptdir = os.path.split(sys.argv[0])[0]
-    os.chdir(scriptdir)
+    if scriptdir:
+        os.chdir(scriptdir)
     
     data = getTotalMD()
 
