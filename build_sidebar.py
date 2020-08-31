@@ -20,7 +20,6 @@ StarIndent = 4
 
 # 要导出的根目录文件夹
 WantExport = [
-    "实践项目",
     "游戏相关",
     "语言和思想",
     "工具研究",
@@ -28,8 +27,7 @@ WantExport = [
 
 # 不导出的文章和目录
 Ignored = [
-    r"实践项目\jigsaw",
-    r"游戏相关\CocosCreator总结.md",
+    "实践项目",
     r"工具研究\electron",
 ]
 
