@@ -1,7 +1,7 @@
 <!-- 由build_sidebar.py生成，勿手改 -->
 * 游戏相关
     * [3D数学](.\游戏相关\3D数学.md)
-    * [CocosCreator总结](.\游戏相关\CocosCreator总结.md)
+    * [CocosCreator](.\游戏相关\CocosCreator.md)
     * [CocosJS](.\游戏相关\CocosJS.md)
     * [unity-shader(草稿)](.\游戏相关\unity-shader.md)
     * [Unity](.\游戏相关\Unity.md)
