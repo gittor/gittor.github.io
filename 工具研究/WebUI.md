@@ -44,7 +44,7 @@ elementui是基于vue开发的一套桌面风格的UI库。
   * 与html页面进行数据交换等操作。通过electron中的ipc接口实现。
   * 运行在唯一的主进程里。
 
-## 新建项目
+**新建项目**
 
 1. 下载模板文件：<a href="/工具研究/electron/myapp.zip" download="myapp.zip">myapp</a>
 2. 修改文件夹名字`myapp`、`package.json`中的`name`字段为新项目的名字
