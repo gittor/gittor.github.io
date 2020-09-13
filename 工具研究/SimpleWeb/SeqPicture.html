@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+<body>
+    <div id="app" class="root" @dragover.prevent @drop.prevent="onPictureDrop($event)">
+        <h1>序列帧图片预览</h1>
+
+        <div class="left">
+                <p v-if="files.length===0">拖动文件到此处</p>
+                <div v-for="(f,i) in this.files" class="">
+                    <el-button class="fullwidth" :type="i===curIndex?'primary':''" @click.prevent.stop="onClickItem(i)">{{f.name}}</el-button>
+                </div>
+        </div>
+
+        <div class="right" >
+            <div @click="isPlaying=!isPlaying">
+                <div v-for="(f,i) in this.files" >
+                    <el-image v-show="curIndex===i" :src="f.url" :fit="'contain'" class="rightpic" ></el-image>
+                </div>
+
+                <div class="foot" v-if="files.length>0">
+                    <el-slider v-model="curIndex" :step="1" show-stops :max="files.length-1" class="oneline"></el-slider>
+                </div>
+            </div>
+            
+            <div v-if="files.length>0">
+                <p>fps</p>
+             <el-input-number v-model="fps" controls-position="right" @change="onFPSChange" :min="1" :max="100">
+             </el-input-number>
+             </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+
+        data: {
+            files: [],
+            curIndex: -1,
+            isPlaying: false,
+            fps: 10, //每秒多少帧
+        },
+
+        created: function()
+        {
+
+        },
+
+        watch: {
+            isPlaying: function(val){
+                console.log("watch play", this.isPlaying, val)
+                this.refreshTimer();
+            },
+        },
+
+        methods: {
+            onPictureDrop: function(event){
+                this.processFileDrop(event.dataTransfer.files)
+            },
+            
+            processFileDrop: function(files){
+                this.files = []
+                this.curIndex = -1;
+
+                for(let i=0; i<files.length; ++i)
+                {
+                    let reader = new FileReader();
+                    reader.onload = function(e){
+                        this.files.push({
+                            name: files[i].name,
+                            url: reader.result,
+                        });
+
+                        if (this.curIndex === -1) {
+                            this.curIndex = 0
+                        }
+                    }.bind(this);
+                    reader.readAsDataURL(files[i]);
+                }
+            },
+
+            onClickItem: function(index) {
+                this.curIndex = index;
+            },
+
+            onFPSChange: function(){
+                if (this.isPlaying) {
+                    this.refreshTimer();
+                }
+            },
+
+            refreshTimer: function(){
+                clearInterval(this.timeid);
+                this.timeid = 0;
+
+                if (this.files.length===0)
+                    return
+
+                if (this.isPlaying)
+                {
+                    this.timeid = setInterval(function(){
+                        this.curIndex = (this.curIndex+1)%this.files.length
+                    }.bind(this), 1000/this.fps);
+                }
+            },
+        },
+    })
+</script>
+
+<style>
+    html,body,#app,.el-container {
+        height: 100%;
+    }
+
+    .root {
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .left {
+        background-color: #a2d5f2;
+        text-align: left;
+        width: 25%;
+        height: 100%;
+        float: left;
+    }
+
+    .right {
+        background-color: #07689f;
+        text-align: left;
+        width: 75%;
+        height: 100%;
+        float: left;
+    }
+
+    .box-card {
+        height: 100%;
+        background-color: #d6e0f0;
+        padding: 0px 0px 0px 0px;
+    }
+
+    .fileitem {
+        font-size: 18px;
+        margin-bottom: 2px;
+        font-weight: bolder;
+        background-color: #8d93ab;
+    }
+
+    .rightpic {
+        width: 100%;
+        height: width;
+    }
+
+    .fullwidth {
+        width: 100%;
+    }
+
+    .iconbig {
+        font-size: 20px;
+        /*margin: 0px 0px 0px 0px;*/
+        padding: 0px 0px 0px 0px;
+        float: left;
+    }
+
+    .oneline {
+        float: left;
+        width: 100%;
+    }
+
+</style>
+
+</html>

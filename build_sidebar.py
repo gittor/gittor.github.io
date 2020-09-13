@@ -29,6 +29,7 @@ WantExport = [
 Ignored = [
     "实践项目",
     r"工具研究\electron",
+    r"工具研究\SimpleWeb",
 ]
 
 # 草稿文章
