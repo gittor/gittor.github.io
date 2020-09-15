@@ -1,3 +1,5 @@
+# 
+
 # 前言
 
 本文总结electron、vue、elementui开发中的常见问题。
@@ -352,3 +354,30 @@ v-model用于在类input元素，与程序变量之间，做绑定。
 ```vue
 <input v-on:keyup.page-down="someMethod">
 ```
+
+# 文件拖拽
+
+```html
+<div @dragover.prevent @drop.prevent="onFileDrop($event.dataTransfer)"></div>
+
+<script>
+  function onFileDrop(dataTransfer){
+    //获取拖拽的文件
+    dataTransfer.files;
+
+    //从文件中读取数据
+    let reader = new FileReader();
+    reader.onload = function(e){
+        reader.result;
+    }.bind(this);
+    reader.readAsDataURL(dataTransfer.files[i]);
+
+  	//读取文本数据
+    dataTransfer.getData("text/plain");
+    dataTransfer.getData("text/uri-list");
+}
+</script>
+```
+
+
+
