@@ -908,6 +908,8 @@ var sprite = new cc.Sprite("#grossini_dance_01.png"); //从cc.spriteFrameCache�
 //src:cc.ZERO, cc.ONE, cc.DST_COLOR, cc.ONE_MINUS_DST_COLOR, cc.DST_ALPHA, cc.ONE_MINUS_DST_ALPHA
 //dst:cc.ZERO, cc.ONE, cc.SRC_COLOR, cc.ONE_MINUS_SRC_COLOR, cc.SRC_ALPHA, cc.ONE_MINUS_SRC_ALPHA
 sprite.setBlendFunc(src, dst);
+
+sprite.setSpriteFrame(cc.spriteFrameCache.getSpriteFrame("image.png"));
 ```
 
 ## cc.Scale9Sprite
@@ -1278,12 +1280,14 @@ cc.textureCache.addImageAsync(url, function(texture){
 }, this);
 ```
 
-## cc.spriteFrame
+## cc.spriteFrameCache
 
 ```js
-cc.spriteFrame.addSpriteFrame(SpriteFrame, name);
+cc.spriteFrameCache.addSpriteFrame(SpriteFrame, name);
 
-cc.spriteFrame.addSpriteFrame(plist);
+cc.spriteFrameCache.addSpriteFrame(plist);
+
+cc.spriteFrameCache.getSpriteFrame("image.png");
 ```
 
 # 网络

@@ -1,3 +1,5 @@
+# 
+
 # 前言
 
 本文总结electron、vue、elementui开发中的常见问题。
@@ -334,7 +336,7 @@ v-model用于在类input元素，与程序变量之间，做绑定。
 | ---------- | ------------------------------------------------------------ |
 | .stop      | 阻止事件继续传播                                             |
 | .prevent   | 提交事件不再重载页面                                         |
-| .capture   | 内部元素触发的事件先在此处理，然后才交由外部元素进行处理     |
+| .capture   | 内部元素触发的事件先在此处理，然后才交由产生事件的内部元素进行处理 |
 | .self      | 只有事件是由本元素产生时，才调用此处理方法                   |
 | .once      | 事件将只会触发一次                                           |
 | .passive   | 事件的默认行为会立即触发，而不是等待someMethod调用完才触发。<br />例如滚动事件发生时，不会等待someMethod执行完才真的进行滚动，而是同时进行的 |
@@ -352,3 +354,30 @@ v-model用于在类input元素，与程序变量之间，做绑定。
 ```vue
 <input v-on:keyup.page-down="someMethod">
 ```
+
+# 文件拖拽
+
+```html
+<div @dragover.prevent @drop.prevent="onFileDrop($event.dataTransfer)"></div>
+
+<script>
+  function onFileDrop(dataTransfer){
+    //获取拖拽的文件
+    dataTransfer.files;
+
+    //从文件中读取数据
+    let reader = new FileReader();
+    reader.onload = function(e){
+        reader.result;
+    }.bind(this);
+    reader.readAsDataURL(dataTransfer.files[i]);
+
+  	//读取文本数据
+    dataTransfer.getData("text/plain");
+    dataTransfer.getData("text/uri-list");
+}
+</script>
+```
+
+
+
