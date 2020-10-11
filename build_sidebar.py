@@ -6,7 +6,7 @@
 # 运行环境
 #   python 3.x
 
-# 输入：无
+# 参数：无
 # 输出：直接覆盖_sidebar.md
 
 import os
